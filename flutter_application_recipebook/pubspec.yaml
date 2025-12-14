@@ -25,8 +25,8 @@ flutter:
     - assets/home_screen/category-seafood.jpg
 
     - assets/view_all_categories/1chicken.jpg
-    - assets/view_all_categories/2beef.jpg
-    - assets/view_all_categories/3pork.jpg
+    - assets/view_all_categories/2pork.jpg
+    - assets/view_all_categories/3beef.jpg
     - assets/view_all_categories/4seafood.jpg
     - assets/view_all_categories/5filipino.jpg
     - assets/view_all_categories/6italian.jpg
