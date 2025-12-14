@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../Widgets/label_pill.dart';
 import '../Widgets/category_pill.dart';
-import '../Widgets/recommendation_pill.dart'; // Import RecommendationPill
+import '../Widgets/recommendation_pill.dart';
+import '../Widgets/bottom_nav_pill.dart'; // 👈 ADD THIS
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,10 +15,34 @@ class _HomeScreenState extends State<HomeScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController searchController = TextEditingController();
 
+  int _currentIndex = 0; // 👈 ADD THIS
+
+  void _onNavTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        debugPrint('Home tapped');
+        break;
+      case 1:
+        debugPrint('Meal Plan tapped');
+        break;
+      case 2:
+        debugPrint('Cart / Grocery List tapped');
+        break;
+      case 3:
+        debugPrint('Favorites tapped');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // **Search bar with TextField**
+            // Search bar
             Padding(
               padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 20),
               child: Container(
@@ -100,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Categories horizontal list
+            // Categories list
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: SingleChildScrollView(
@@ -146,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Recommended horizontal list
+            // Recommended list
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: SingleChildScrollView(
@@ -188,8 +213,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
+      ),
+
+      // 👇 BOTTOM NAV PILL ADDED HERE
+      bottomNavigationBar: BottomNavPill(
+        currentIndex: _currentIndex,
+        onTap: _onNavTap,
       ),
     );
   }
