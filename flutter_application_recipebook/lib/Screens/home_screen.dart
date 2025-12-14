@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../Widgets/label_pill.dart';
 import '../Widgets/category_pill.dart';
 import '../Widgets/recommendation_pill.dart';
-import '../Widgets/bottom_nav_pill.dart'; // 👈 ADD THIS
+import '../Widgets/bottom_nav_pill.dart';
+import 'view_all_categories.dart'; // 👈 NEW IMPORT
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController searchController = TextEditingController();
 
-  int _currentIndex = 0; // 👈 ADD THIS
+  int _currentIndex = 0;
 
   void _onNavTap(int index) {
     setState(() {
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 231, 231, 231),
+      backgroundColor: Colors.white,
 
       body: SingleChildScrollView(
         child: Column(
@@ -49,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Greeting
             Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 85),
+              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 95),
               child: LabelPill(
                 alignment: MainAxisAlignment.spaceBetween,
                 text: 'Hello, Mel Stephen',
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
+                      color: Colors.grey.withValues(alpha: 0.3),
                       spreadRadius: 1,
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -104,21 +105,34 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     'Categories',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 22,
                     ),
                   ),
-                  Text(
-                    'View All',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 29, 81, 32),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+
+                  // 👇 VIEW ALL NAVIGATION
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const ViewAllCategories(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'View All',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 29, 81, 32),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 ],
@@ -131,28 +145,28 @@ class _HomeScreenState extends State<HomeScreen> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: [
-                    const SizedBox(width: 25),
+                  children: const [
+                    SizedBox(width: 25),
                     CategoryPill(
                       image: AssetImage('assets/category-chicken.jpg'),
                       label: 'Chicken',
                     ),
-                    const SizedBox(width: 15),
+                    SizedBox(width: 15),
                     CategoryPill(
                       image: AssetImage('assets/category-pork.jpg'),
                       label: 'Pork',
                     ),
-                    const SizedBox(width: 15),
+                    SizedBox(width: 15),
                     CategoryPill(
                       image: AssetImage('assets/category-beef.jpg'),
                       label: 'Beef',
                     ),
-                    const SizedBox(width: 15),
+                    SizedBox(width: 15),
                     CategoryPill(
                       image: AssetImage('assets/category-seafood.jpg'),
                       label: 'Seafood',
                     ),
-                    const SizedBox(width: 25),
+                    SizedBox(width: 25),
                   ],
                 ),
               ),
@@ -219,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // 👇 BOTTOM NAV PILL ADDED HERE
+      // Bottom Navigation
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,
