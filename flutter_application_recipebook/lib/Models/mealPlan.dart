@@ -1,4 +1,4 @@
-import 'recipe.dart';
+import 'package:flutter_application_recipebook/Models/recipe.dart';
 
 class MealPlan {
   final Recipe? breakfast;
