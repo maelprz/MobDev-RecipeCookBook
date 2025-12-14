@@ -1,4 +1,4 @@
-import 'shopItem.dart';
+import 'shop_item.dart';
 
 class ShoppingList {
   final List<ShoppingItem> items;
