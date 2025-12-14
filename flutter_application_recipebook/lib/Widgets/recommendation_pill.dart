@@ -19,7 +19,7 @@ class RecommendationPill extends StatelessWidget {
       children: [
         Container(
           width: 200,
-          height: 260,
+          height: 270,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             image: DecorationImage(

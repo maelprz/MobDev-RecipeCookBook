@@ -16,7 +16,7 @@ class BottomNavPill extends StatelessWidget {
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color.fromARGB(255, 231, 231, 231),
         borderRadius: BorderRadius.circular(40),
         boxShadow: [
           BoxShadow(

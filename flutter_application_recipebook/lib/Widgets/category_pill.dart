@@ -10,8 +10,8 @@ class CategoryPill extends StatelessWidget {
     super.key,
     required this.image,
     required this.label,
-    this.width = 120,
-    this.height = 140,
+    this.width = 140,
+    this.height = 180,
   });
 
   @override

@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 231, 231, 231),
 
       body: SingleChildScrollView(
         child: Column(
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Greeting
             Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 95),
+              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 85),
               child: LabelPill(
                 alignment: MainAxisAlignment.spaceBetween,
                 text: 'Hello, Mel Stephen',
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 22,
+                      fontSize: 25,
                     ),
                   ),
                   Text(
@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(
                       color: Color.fromARGB(255, 29, 81, 32),
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 20,
                     ),
                   ),
                 ],
