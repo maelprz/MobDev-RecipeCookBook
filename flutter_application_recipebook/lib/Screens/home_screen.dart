@@ -53,11 +53,11 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 95),
               child: LabelPill(
                 alignment: MainAxisAlignment.spaceBetween,
-                text: 'Hello, Mel Stephen',
+                text: 'Hello, DEMON LORD!',
                 textSize: 25,
                 icon: Icons.star,
                 index: 1,
-                textColor: Colors.black,
+                textColor: const Color(0xFF002A22),
               ),
             ),
 
@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Text(
                     'Categories',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Color(0xFF002A22),
                       fontWeight: FontWeight.bold,
                       fontSize: 22,
                     ),
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: const Text(
                       'View All',
                       style: TextStyle(
-                        color: Color.fromARGB(255, 29, 81, 32),
+                        color: Color(0xFF002A22),
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
@@ -148,22 +148,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: const [
                     SizedBox(width: 25),
                     CategoryPill(
-                      image: AssetImage('assets/category-chicken.jpg'),
+                      image: AssetImage('assets/home_screen/category-chicken.jpg'),
                       label: 'Chicken',
                     ),
                     SizedBox(width: 15),
                     CategoryPill(
-                      image: AssetImage('assets/category-pork.jpg'),
+                      image: AssetImage('assets/home_screen/category-pork.jpg'),
                       label: 'Pork',
                     ),
                     SizedBox(width: 15),
                     CategoryPill(
-                      image: AssetImage('assets/category-beef.jpg'),
+                      image: AssetImage('assets/home_screen/category-beef.jpg'),
                       label: 'Beef',
                     ),
                     SizedBox(width: 15),
                     CategoryPill(
-                      image: AssetImage('assets/category-seafood.jpg'),
+                      image: AssetImage('assets/home_screen/category-seafood.jpg'),
                       label: 'Seafood',
                     ),
                     SizedBox(width: 25),
@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
-                  color: Colors.black,
+                  color: Color(0xFF002A22),
                 ),
               ),
             ),
@@ -194,31 +194,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: const [
                     SizedBox(width: 25),
                     RecommendationPill(
-                      imagePath: 'assets/category-chicken.jpg',
+                      imagePath: 'assets/home_screen/category-chicken.jpg',
                       recipeName: 'Grilled Chicken',
                       details: '5 ingredients | 30 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
-                      imagePath: 'assets/category-beef.jpg',
+                      imagePath: 'assets/home_screen/category-beef.jpg',
                       recipeName: 'Beef Steak',
                       details: '7 ingredients | 45 min',
                     ),
                     SizedBox(width: 25),
                     RecommendationPill(
-                      imagePath: 'assets/category-beef.jpg',
+                      imagePath: 'assets/home_screen/category-beef.jpg',
                       recipeName: 'Beef Steak',
                       details: '7 ingredients | 45 min',
                     ),
                     SizedBox(width: 25),
                     RecommendationPill(
-                      imagePath: 'assets/category-beef.jpg',
+                      imagePath: 'assets/home_screen/category-beef.jpg',
                       recipeName: 'Beef Steak',
                       details: '7 ingredients | 45 min',
                     ),
                     SizedBox(width: 25),
                     RecommendationPill(
-                      imagePath: 'assets/category-beef.jpg',
+                      imagePath: 'assets/home_screen/category-beef.jpg',
                       recipeName: 'Beef Steak',
                       details: '7 ingredients | 45 min',
                     ),

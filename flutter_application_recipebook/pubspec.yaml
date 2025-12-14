@@ -19,7 +19,18 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/category-beef.jpg
-    - assets/category-chicken.jpg
-    - assets/category-pork.jpg
-    - assets/category-seafood.jpg
+    - assets/home_screen/category-beef.jpg
+    - assets/home_screen/category-chicken.jpg
+    - assets/home_screen/category-pork.jpg
+    - assets/home_screen/category-seafood.jpg
+
+    - assets/view_all_categories/1chicken.jpg
+    - assets/view_all_categories/2beef.jpg
+    - assets/view_all_categories/3pork.jpg
+    - assets/view_all_categories/4seafood.jpg
+    - assets/view_all_categories/5filipino.jpg
+    - assets/view_all_categories/6italian.jpg
+    - assets/view_all_categories/7mexican.jpg
+    - assets/view_all_categories/8japanese.jpg
+    - assets/view_all_categories/9snacks.jpg
+    - assets/view_all_categories/10desserts.jpg
