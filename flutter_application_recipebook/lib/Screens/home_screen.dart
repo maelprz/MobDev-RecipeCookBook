@@ -3,7 +3,8 @@ import '../Widgets/label_pill.dart';
 import '../Widgets/category_pill.dart';
 import '../Widgets/recommendation_pill.dart';
 import '../Widgets/bottom_nav_pill.dart';
-import 'view_all_categories.dart'; // 👈 NEW IMPORT
+import '../Widgets/search_bar_pill.dart';
+import 'view_all_categories.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController searchController = TextEditingController();
 
   int _currentIndex = 0;
@@ -40,6 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -50,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Greeting
             Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 95),
+              padding: const EdgeInsets.only(left: 25, right: 25, top: 95),
               child: LabelPill(
                 alignment: MainAxisAlignment.spaceBetween,
                 text: 'Hello, DEMON LORD!',
@@ -61,48 +68,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Search bar
+            // Search Bar (Custom Widget)
             Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 20),
-              child: Container(
-                height: 60,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.3),
-                      spreadRadius: 1,
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                      hintText: "Search for recipes",
-                      hintStyle: TextStyle(
-                        color: Color.fromARGB(255, 113, 113, 113),
-                        fontSize: 18,
-                      ),
-                      border: InputBorder.none,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                        size: 26,
-                      ),
-                    ),
-                  ),
-                ),
+              padding: const EdgeInsets.only(left: 25, right: 25, top: 20),
+              child: SearchBarPill(
+                controller: searchController,
+                hintText: 'Search for recipes',
+                onChanged: (value) {
+                  debugPrint('Search: $value');
+                },
               ),
             ),
 
             // Categories Header
             Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 25),
+              padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -114,15 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 22,
                     ),
                   ),
-
-                  // 👇 VIEW ALL NAVIGATION
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const ViewAllCategories(),
+                          builder: (_) => const ViewAllCategories(),
                         ),
                       );
                     },
@@ -139,16 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Categories list
+            // Categories List
             Padding(
-              padding: const EdgeInsets.only(top: 15.0),
+              padding: const EdgeInsets.only(top: 15),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: const [
                     SizedBox(width: 25),
                     CategoryPill(
-                      image: AssetImage('assets/home_screen/category-chicken.jpg'),
+                      image: AssetImage(
+                        'assets/home_screen/category-chicken.jpg',
+                      ),
                       label: 'Chicken',
                     ),
                     SizedBox(width: 15),
@@ -163,7 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(width: 15),
                     CategoryPill(
-                      image: AssetImage('assets/home_screen/category-seafood.jpg'),
+                      image: AssetImage(
+                        'assets/home_screen/category-seafood.jpg',
+                      ),
                       label: 'Seafood',
                     ),
                     SizedBox(width: 25),
@@ -174,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Recommended Header
             const Padding(
-              padding: EdgeInsets.only(left: 25.0, top: 25.0),
+              padding: EdgeInsets.only(left: 25, top: 25),
               child: Text(
                 'Recommended',
                 style: TextStyle(
@@ -185,9 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Recommended list
+            // Recommended List
             Padding(
-              padding: const EdgeInsets.only(top: 15.0),
+              padding: const EdgeInsets.only(top: 15),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -199,12 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       details: '5 ingredients | 30 min',
                     ),
                     SizedBox(width: 15),
-                    RecommendationPill(
-                      imagePath: 'assets/home_screen/category-beef.jpg',
-                      recipeName: 'Beef Steak',
-                      details: '7 ingredients | 45 min',
-                    ),
-                    SizedBox(width: 25),
                     RecommendationPill(
                       imagePath: 'assets/home_screen/category-beef.jpg',
                       recipeName: 'Beef Steak',
