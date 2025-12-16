@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // <-- import Riverpod
+import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    const ProviderScope(
+      // <-- wrap your app
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -12,7 +18,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(), 
+      home: HomeScreen(),
     );
   }
 }

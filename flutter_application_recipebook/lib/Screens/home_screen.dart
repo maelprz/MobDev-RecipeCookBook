@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Widgets/label_pill.dart';
 import '../Widgets/category_pill.dart';
 import '../Widgets/recommendation_pill.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import 'view_all_categories.dart';
+import '../Providers/recipe_providers.dart'; // <-- import your providers
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
-
   int _currentIndex = 0;
 
   void _onNavTap(int index) {
@@ -48,9 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch filtered recipes based on search query
+    final filteredRecipes = ref.watch(filteredRecipesProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,14 +70,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Search Bar (Custom Widget)
+            // Search Bar
             Padding(
               padding: const EdgeInsets.only(left: 25, right: 25, top: 20),
               child: SearchBarPill(
                 controller: searchController,
                 hintText: 'Search for recipes',
                 onChanged: (value) {
-                  debugPrint('Search: $value');
+                  ref.read(searchQueryProvider.notifier).state = value;
                 },
               ),
             ),
@@ -116,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Categories List
+            // Categories List (unchanged)
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: SingleChildScrollView(
@@ -166,43 +168,30 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Recommended List
+            // Recommended List (dynamic)
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: const [
-                    SizedBox(width: 25),
-                    RecommendationPill(
-                      imagePath: 'assets/home_screen/category-chicken.jpg',
-                      recipeName: 'Grilled Chicken',
-                      details: '5 ingredients | 30 min',
+                  children: [
+                    const SizedBox(width: 25),
+                    ...filteredRecipes.map(
+                      (recipe) => Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: RecommendationPill(
+                          imagePath: recipe.imagePath,
+                          recipeName: recipe.name,
+                          details:
+                              '${recipe.ingredients.length} ingredients | ${recipe.cookingTime} min',
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 15),
-                    RecommendationPill(
-                      imagePath: 'assets/home_screen/category-beef.jpg',
-                      recipeName: 'Beef Steak',
-                      details: '7 ingredients | 45 min',
-                    ),
-                    SizedBox(width: 25),
-                    RecommendationPill(
-                      imagePath: 'assets/home_screen/category-beef.jpg',
-                      recipeName: 'Beef Steak',
-                      details: '7 ingredients | 45 min',
-                    ),
-                    SizedBox(width: 25),
-                    RecommendationPill(
-                      imagePath: 'assets/home_screen/category-beef.jpg',
-                      recipeName: 'Beef Steak',
-                      details: '7 ingredients | 45 min',
-                    ),
-                    SizedBox(width: 25),
+                    const SizedBox(width: 25),
                   ],
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
           ],
         ),
