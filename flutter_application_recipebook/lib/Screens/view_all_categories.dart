@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../Widgets/bottom_nav_pill.dart';
+import 'category_recipes_screen.dart';
+import '../Widgets/filter_pill.dart';
+import '../Data/category_data.dart';
 
 class ViewAllCategories extends StatefulWidget {
   const ViewAllCategories({super.key});
@@ -17,19 +20,8 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
       _currentIndex = index;
     });
 
-    switch (index) {
-      case 0:
-        Navigator.pop(context);
-        break;
-      case 1:
-        debugPrint('Meal Plan tapped');
-        break;
-      case 2:
-        debugPrint('Cart / Grocery List tapped');
-        break;
-      case 3:
-        debugPrint('Favorites tapped');
-        break;
+    if (index == 0) {
+      Navigator.pop(context);
     }
   }
 
@@ -38,101 +30,165 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF002A22)),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'All Categories',
-          style: TextStyle(
-            color: Color(0xFF002A22),
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-      ),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
 
-      body: Column(
-        children: [
-          // 🔍 Search bar
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 20),
-            child: Container(
-              height: 60,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.3),
-                    spreadRadius: 1,
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+            // 🔙 Back Button
+            Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF002A22)),
+                onPressed: () => Navigator.pop(context),
               ),
-              child: Center(
-                child: TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                    hintText: "Search for recipes",
-                    hintStyle: TextStyle(
-                      color: Color.fromARGB(255, 113, 113, 113),
-                      fontSize: 18,
+            ),
+
+            // 🔍 Search Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Container(
+                height: 55,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.25),
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
                     ),
-                    border: InputBorder.none,
-                    prefixIcon: Icon(
+                  ],
+                ),
+                child: const Row(
+                  children: [
+                    Icon(
                       Icons.search,
                       color: Color.fromARGB(255, 113, 113, 113),
-                      size: 26,
                     ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // 📦 Categories Grid
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: GridView.builder(
-                itemCount: 10,
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                  childAspectRatio: 0.9,
-                ),
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.grey.shade200,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Category',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Search Recipes',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 113, 113, 113),
+                        fontSize: 16,
                       ),
                     ),
-                  );
-                },
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 25),
+
+            // 🟢 Categories Header
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              child: Text(
+                'Categories',
+                style: TextStyle(
+                  color: Color(0xFF002A22),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // 🔘 Filter Pills
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Wrap(
+                spacing: 10,
+                children: const [
+                  FilterPill(label: 'Appetizer'),
+                  FilterPill(label: 'Main Course'),
+                  FilterPill(label: 'Snack'),
+                  FilterPill(label: 'Cuisine'),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // 📦 Category Grid
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: GridView.builder(
+                  itemCount: categories.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                    childAspectRatio: 0.85,
+                  ),
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CategoryRecipeScreen(
+                              categoryTitle: category['name']!,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                            image: AssetImage(category['image']!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          alignment: Alignment.bottomLeft,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: const LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [Colors.black54, Colors.transparent],
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                category['name']!,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                category['count']!,
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
 
       bottomNavigationBar: BottomNavPill(

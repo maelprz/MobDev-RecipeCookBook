@@ -130,12 +130,39 @@ class _CategoryRecipeScreenState extends State<CategoryRecipeScreen> {
                       time: '50 min',
                       difficulty: 'Medium',
                     ),
+
+                    RecipeCard(
+                      imagePath: 'assets/home_screen/category-chicken.jpg',
+                      title: 'Honey Buffalo Wings',
+                      time: '50 min',
+                      difficulty: 'Medium',
+                    ),
+
+                    RecipeCard(
+                      imagePath: 'assets/home_screen/category-chicken.jpg',
+                      title: 'Honey Buffalo Wings',
+                      time: '50 min',
+                      difficulty: 'Medium',
+                    ),
+
+                    RecipeCard(
+                      imagePath: 'assets/home_screen/category-chicken.jpg',
+                      title: 'Honey Buffalo Wings',
+                      time: '50 min',
+                      difficulty: 'Medium',
+                    ),
+
+                    RecipeCard(
+                      imagePath: 'assets/home_screen/category-chicken.jpg',
+                      title: 'Honey Buffalo Wings',
+                      time: '50 min',
+                      difficulty: 'Medium',
+                    ),
                   ],
                 ),
               ),
             ),
 
-            // Bottom Navigation
             BottomNavPill(currentIndex: _currentIndex, onTap: _onNavTap),
           ],
         ),
