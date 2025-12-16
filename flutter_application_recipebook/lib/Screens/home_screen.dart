@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../Providers/recipe_providers.dart';
 import '../Widgets/label_pill.dart';
 import '../Widgets/category_pill.dart';
 import '../Widgets/recommendation_pill.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import 'view_all_categories.dart';
-import '../Providers/recipe_providers.dart'; // <-- import your providers
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -17,39 +18,16 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
+  bool _showDropdown = false;
   int _currentIndex = 0;
 
   void _onNavTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        debugPrint('Home tapped');
-        break;
-      case 1:
-        debugPrint('Meal Plan tapped');
-        break;
-      case 2:
-        debugPrint('Cart / Grocery List tapped');
-        break;
-      case 3:
-        debugPrint('Favorites tapped');
-        break;
-    }
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
+    setState(() => _currentIndex = index);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Watch filtered recipes based on search query
-    final filteredRecipes = ref.watch(filteredRecipesProvider);
+    final searchResults = ref.watch(filteredRecipesProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -70,30 +48,71 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-            // Search Bar
+            // 🔍 SEARCH BAR + DROPDOWN (ATTACHED)
             Padding(
-              padding: const EdgeInsets.only(left: 25, right: 25, top: 20),
-              child: SearchBarPill(
-                controller: searchController,
-                hintText: 'Search for recipes',
-                onChanged: (value) {
-                  ref.read(searchQueryProvider.notifier).state = value;
-                },
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+              child: Column(
+                children: [
+                  SearchBarPill(
+                    controller: searchController,
+                    onChanged: (value) {
+                      ref.read(searchQueryProvider.notifier).state = value;
+                      setState(() => _showDropdown = value.isNotEmpty);
+                    },
+                  ),
+
+                  // ✅ DROPDOWN TOUCHES SEARCH BAR
+                  if (_showDropdown && searchResults.isNotEmpty)
+                    Container(
+                      margin: const EdgeInsets.only(top: 6),
+                      constraints: const BoxConstraints(maxHeight: 220),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.25),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: searchResults.length,
+                        separatorBuilder: (_, __) => const Divider(height: 1),
+                        itemBuilder: (context, index) {
+                          final recipe = searchResults[index];
+
+                          return ListTile(
+                            title: Text(recipe.name),
+                            subtitle: Text(
+                              '${recipe.ingredients.length} ingredients • ${recipe.cookingTime} min',
+                            ),
+                            onTap: () {
+                              searchController.text = recipe.name;
+                              setState(() => _showDropdown = false);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                ],
               ),
             ),
 
             // Categories Header
             Padding(
-              padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
+              padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Categories',
                     style: TextStyle(
-                      color: Color(0xFF002A22),
-                      fontWeight: FontWeight.bold,
                       fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF002A22),
                     ),
                   ),
                   GestureDetector(
@@ -108,9 +127,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: const Text(
                       'View All',
                       style: TextStyle(
-                        color: Color(0xFF002A22),
-                        fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -118,7 +136,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-            // Categories List (unchanged)
+            // Categories List
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: SingleChildScrollView(
@@ -142,12 +160,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       image: AssetImage('assets/home_screen/category-beef.jpg'),
                       label: 'Beef',
                     ),
+                    SizedBox(width: 25),
+                  ],
+                ),
+              ),
+            ),
+
+            // ⭐ RECOMMENDED (STATIC)
+            const Padding(
+              padding: EdgeInsets.only(left: 25, top: 25),
+              child: Text(
+                'Recommended',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: const [
+                    SizedBox(width: 25),
+                    RecommendationPill(
+                      imagePath: 'assets/home_screen/category-chicken.jpg',
+                      recipeName: 'Grilled Chicken',
+                      details: '5 ingredients | 30 min',
+                    ),
                     SizedBox(width: 15),
-                    CategoryPill(
-                      image: AssetImage(
-                        'assets/home_screen/category-seafood.jpg',
-                      ),
-                      label: 'Seafood',
+                    RecommendationPill(
+                      imagePath: 'assets/home_screen/category-beef.jpg',
+                      recipeName: 'Beef Steak',
+                      details: '7 ingredients | 45 min',
                     ),
                     SizedBox(width: 25),
                   ],
@@ -155,49 +199,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-            // Recommended Header
-            const Padding(
-              padding: EdgeInsets.only(left: 25, top: 25),
-              child: Text(
-                'Recommended',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: Color(0xFF002A22),
-                ),
-              ),
-            ),
-
-            // Recommended List (dynamic)
-            Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 25),
-                    ...filteredRecipes.map(
-                      (recipe) => Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: RecommendationPill(
-                          imagePath: recipe.imagePath,
-                          recipeName: recipe.name,
-                          details:
-                              '${recipe.ingredients.length} ingredients | ${recipe.cookingTime} min',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 25),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 80),
           ],
         ),
       ),
 
-      // Bottom Navigation
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,

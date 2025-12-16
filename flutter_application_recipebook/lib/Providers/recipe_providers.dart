@@ -1,7 +1,6 @@
-import 'package:flutter_application_recipebook/Data/recipe_data.dart';
-import 'package:flutter_application_recipebook/Models/recipe.dart';
-//import 'package:flutter_application_recipebook/Models/ingredient.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../Data/recipe_data.dart';
+import '../Models/recipe.dart';
 
 final recipesDataProvider = Provider<List<Recipe>>((ref) {
   return recipesData;
@@ -13,7 +12,7 @@ final filteredRecipesProvider = Provider<List<Recipe>>((ref) {
   final query = ref.watch(searchQueryProvider).toLowerCase();
   final allRecipes = ref.watch(recipesDataProvider);
 
-  if (query.isEmpty) return allRecipes;
+  if (query.isEmpty) return [];
 
   return allRecipes.where((recipe) {
     final nameMatch = recipe.name.toLowerCase().contains(query);
