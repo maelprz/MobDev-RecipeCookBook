@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+
 import '../Widgets/bottom_nav_pill.dart';
-import 'category_recipes_screen.dart';
 import '../Widgets/filter_pill.dart';
 import '../Data/category_data.dart';
+
+// Import all category screens
+import '../Category/chicken_recipes_screen.dart';
+import '../Category/pork_recipes_screen.dart';
+import '../Category/beef_recipes_screen.dart';
+import '../Category/seafood_recipes_screen.dart';
+import '../Category/filipino_recipes_screen.dart';
+import '../Category/italian_recipes_screen.dart';
+import '../Category/mexican_recipes_screen.dart';
+import '../Category/japanese_recipes_screen.dart';
+import '../Category/snacks_recipes_screen.dart';
+import '../Category/desserts_recipes_screen.dart';
 
 class ViewAllCategories extends StatefulWidget {
   const ViewAllCategories({super.key});
@@ -13,15 +25,39 @@ class ViewAllCategories extends StatefulWidget {
 
 class _ViewAllCategoriesState extends State<ViewAllCategories> {
   int _currentIndex = 0;
-  final TextEditingController searchController = TextEditingController();
 
   void _onNavTap(int index) {
     setState(() {
       _currentIndex = index;
     });
 
-    if (index == 0) {
-      Navigator.pop(context);
+    if (index == 0) Navigator.pop(context);
+  }
+
+  Widget _getCategoryScreen(String name) {
+    switch (name) {
+      case 'Chicken':
+        return const ChickenRecipesScreen();
+      case 'Pork':
+        return const PorkRecipesScreen();
+      case 'Beef':
+        return const BeefRecipesScreen();
+      case 'Seafood':
+        return const SeafoodRecipesScreen();
+      case 'Filipino':
+        return const FilipinoRecipesScreen();
+      case 'Italian':
+        return const ItalianRecipesScreen();
+      case 'Mexican':
+        return const MexicanRecipesScreen();
+      case 'Japanese':
+        return const JapaneseRecipesScreen();
+      case 'Snacks':
+        return const SnacksRecipesScreen();
+      case 'Desserts':
+        return const DessertsRecipesScreen();
+      default:
+        return const SizedBox(); // fallback
     }
   }
 
@@ -29,14 +65,13 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
 
-            // 🔙 Back Button
+            // Back Button
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: IconButton(
@@ -45,45 +80,9 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
               ),
             ),
 
-            // 🔍 Search Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Container(
-                height: 55,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.25),
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: const Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: Color.fromARGB(255, 113, 113, 113),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Search Recipes',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 113, 113, 113),
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
             const SizedBox(height: 25),
 
-            // 🟢 Categories Header
+            // Categories Header
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
               child: Text(
@@ -98,11 +97,11 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
 
             const SizedBox(height: 10),
 
-            // 🔘 Filter Pills
+            // Filter Pills
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Wrap(
-                spacing: 10,
+                spacing: 5,
                 children: const [
                   FilterPill(label: 'Appetizer'),
                   FilterPill(label: 'Main Course'),
@@ -114,7 +113,7 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
 
             const SizedBox(height: 20),
 
-            // 📦 Category Grid
+            // Category Grid
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -134,9 +133,7 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => CategoryRecipeScreen(
-                              categoryTitle: category['name']!,
-                            ),
+                            builder: (_) => _getCategoryScreen(category['name']!),
                           ),
                         );
                       },
@@ -190,7 +187,6 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
           ],
         ),
       ),
-
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,
