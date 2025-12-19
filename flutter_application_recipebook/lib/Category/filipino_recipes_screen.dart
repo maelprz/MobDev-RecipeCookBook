@@ -42,6 +42,23 @@ class _FilipinoRecipesScreenState extends State<FilipinoRecipesScreen> {
     super.dispose();
   }
 
+  final List<Map<String, dynamic>> recipes = const [
+    {
+      'imagePath': 'assets/home_screen/category-filipino.jpg',
+      'title': 'Adobo',
+      'time': '40 min',
+      'difficulty': 'Medium',
+      'isFavorite': false,
+    },
+    {
+      'imagePath': 'assets/home_screen/category-filipino.jpg',
+      'title': 'Sinigang',
+      'time': '50 min',
+      'difficulty': 'Medium',
+      'isFavorite': false,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     const categoryTitle = 'Filipino';
@@ -53,6 +70,8 @@ class _FilipinoRecipesScreenState extends State<FilipinoRecipesScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
+
+            // Back Button
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: IconButton(
@@ -60,7 +79,10 @@ class _FilipinoRecipesScreenState extends State<FilipinoRecipesScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
             ),
+
             const SizedBox(height: 10),
+
+            // Search Bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: SearchBarPill(
@@ -71,7 +93,10 @@ class _FilipinoRecipesScreenState extends State<FilipinoRecipesScreen> {
                 },
               ),
             ),
+
             const SizedBox(height: 25),
+
+            // Category Title
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
               child: Text(
@@ -83,7 +108,10 @@ class _FilipinoRecipesScreenState extends State<FilipinoRecipesScreen> {
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
+
+            // Filter Pills
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
@@ -94,32 +122,36 @@ class _FilipinoRecipesScreenState extends State<FilipinoRecipesScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 20),
+
+            // Recipe Cards - optimized
             Expanded(
-              child: SingleChildScrollView(
+              child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Column(
-                  children: const [
-                    RecipeCard(
-                      imagePath: 'assets/home_screen/category-filipino.jpg',
-                      title: 'Adobo',
-                      time: '40 min',
-                      difficulty: 'Medium',
+                itemCount: recipes.length,
+                itemBuilder: (context, index) {
+                  final recipe = recipes[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: RecipeCard(
+                      imagePath: recipe['imagePath'],
+                      title: recipe['title'],
+                      time: recipe['time'],
+                      difficulty: recipe['difficulty'],
+                      isFavorite: recipe['isFavorite'],
                     ),
-                    RecipeCard(
-                      imagePath: 'assets/home_screen/category-filipino.jpg',
-                      title: 'Sinigang',
-                      time: '50 min',
-                      difficulty: 'Medium',
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavPill(currentIndex: _currentIndex, onTap: _onNavTap),
+      bottomNavigationBar: BottomNavPill(
+        currentIndex: _currentIndex,
+        onTap: _onNavTap,
+      ),
     );
   }
 }

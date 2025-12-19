@@ -42,6 +42,23 @@ class _DessertsRecipesScreenState extends State<DessertsRecipesScreen> {
     super.dispose();
   }
 
+  final List<Map<String, dynamic>> recipes = const [
+    {
+      'imagePath': 'assets/home_screen/category-desserts.jpg',
+      'title': 'Chocolate Cake',
+      'time': '50 min',
+      'difficulty': 'Medium',
+      'isFavorite': false,
+    },
+    {
+      'imagePath': 'assets/home_screen/category-desserts.jpg',
+      'title': 'Ice Cream',
+      'time': '30 min',
+      'difficulty': 'Easy',
+      'isFavorite': false,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     const categoryTitle = 'Desserts';
@@ -53,6 +70,8 @@ class _DessertsRecipesScreenState extends State<DessertsRecipesScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
+
+            // Back Button
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: IconButton(
@@ -60,7 +79,10 @@ class _DessertsRecipesScreenState extends State<DessertsRecipesScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
             ),
+
             const SizedBox(height: 10),
+
+            // Search Bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: SearchBarPill(
@@ -71,7 +93,10 @@ class _DessertsRecipesScreenState extends State<DessertsRecipesScreen> {
                 },
               ),
             ),
+
             const SizedBox(height: 25),
+
+            // Category Title
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
               child: Text(
@@ -83,7 +108,10 @@ class _DessertsRecipesScreenState extends State<DessertsRecipesScreen> {
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
+
+            // Filter Pills
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
@@ -94,32 +122,36 @@ class _DessertsRecipesScreenState extends State<DessertsRecipesScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 20),
+
+            // Recipe Cards - optimized with ListView.builder
             Expanded(
-              child: SingleChildScrollView(
+              child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Column(
-                  children: const [
-                    RecipeCard(
-                      imagePath: 'assets/home_screen/category-desserts.jpg',
-                      title: 'Chocolate Cake',
-                      time: '50 min',
-                      difficulty: 'Medium',
+                itemCount: recipes.length,
+                itemBuilder: (context, index) {
+                  final recipe = recipes[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: RecipeCard(
+                      imagePath: recipe['imagePath'],
+                      title: recipe['title'],
+                      time: recipe['time'],
+                      difficulty: recipe['difficulty'],
+                      isFavorite: recipe['isFavorite'],
                     ),
-                    RecipeCard(
-                      imagePath: 'assets/home_screen/category-desserts.jpg',
-                      title: 'Ice Cream',
-                      time: '30 min',
-                      difficulty: 'Easy',
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavPill(currentIndex: _currentIndex, onTap: _onNavTap),
+      bottomNavigationBar: BottomNavPill(
+        currentIndex: _currentIndex,
+        onTap: _onNavTap,
+      ),
     );
   }
 }

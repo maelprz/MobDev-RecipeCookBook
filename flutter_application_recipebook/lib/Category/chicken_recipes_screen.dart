@@ -42,9 +42,40 @@ class _ChickenRecipesScreenState extends State<ChickenRecipesScreen> {
     super.dispose();
   }
 
+  final List<Map<String, dynamic>> recipes = const [
+    {
+      'imagePath': 'assets/home_screen/category-chicken.jpg',
+      'title': 'Garlic Butter Chicken Thighs',
+      'time': '25 min',
+      'difficulty': 'Easy',
+      'isFavorite': true,
+    },
+    {
+      'imagePath': 'assets/home_screen/category-chicken.jpg',
+      'title': 'Chicken Teriyaki',
+      'time': '20 min',
+      'difficulty': 'Easy',
+      'isFavorite': false,
+    },
+    {
+      'imagePath': 'assets/home_screen/category-chicken.jpg',
+      'title': 'Crispy Fried Chicken',
+      'time': '45 min',
+      'difficulty': 'Easy',
+      'isFavorite': false,
+    },
+    {
+      'imagePath': 'assets/home_screen/category-chicken.jpg',
+      'title': 'Honey Buffalo Wings',
+      'time': '50 min',
+      'difficulty': 'Medium',
+      'isFavorite': false,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
-    const categoryTitle = 'Chicken'; // change this per screen
+    const categoryTitle = 'Chicken';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -108,45 +139,33 @@ class _ChickenRecipesScreenState extends State<ChickenRecipesScreen> {
 
             const SizedBox(height: 20),
 
-            // Recipe Cards
+            // Recipe Cards - optimized with ListView.builder
             Expanded(
-              child: SingleChildScrollView(
+              child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Column(
-                  children: const [
-                    RecipeCard(
-                      imagePath: 'assets/home_screen/category-chicken.jpg',
-                      title: 'Garlic Butter Chicken Thighs',
-                      time: '25 min',
-                      difficulty: 'Easy',
-                      isFavorite: true,
+                itemCount: recipes.length,
+                itemBuilder: (context, index) {
+                  final recipe = recipes[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: RecipeCard(
+                      imagePath: recipe['imagePath'],
+                      title: recipe['title'],
+                      time: recipe['time'],
+                      difficulty: recipe['difficulty'],
+                      isFavorite: recipe['isFavorite'],
                     ),
-                    RecipeCard(
-                      imagePath: 'assets/home_screen/category-chicken.jpg',
-                      title: 'Chicken Teriyaki',
-                      time: '20 min',
-                      difficulty: 'Easy',
-                    ),
-                    RecipeCard(
-                      imagePath: 'assets/home_screen/category-chicken.jpg',
-                      title: 'Crispy Fried Chicken',
-                      time: '45 min',
-                      difficulty: 'Easy',
-                    ),
-                    RecipeCard(
-                      imagePath: 'assets/home_screen/category-chicken.jpg',
-                      title: 'Honey Buffalo Wings',
-                      time: '50 min',
-                      difficulty: 'Medium',
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavPill(currentIndex: _currentIndex, onTap: _onNavTap),
+      bottomNavigationBar: BottomNavPill(
+        currentIndex: _currentIndex,
+        onTap: _onNavTap,
+      ),
     );
   }
 }
