@@ -71,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.25),
+                            color: Colors.grey.withValues(alpha: 64),
                             blurRadius: 6,
                             offset: const Offset(0, 3),
                           ),
