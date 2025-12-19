@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class FilterPill extends StatelessWidget {
   final String label;
 
-  const FilterPill({required this.label});
+  const FilterPill({
+    super.key,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class FilterPill extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 13), // ~5%
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),

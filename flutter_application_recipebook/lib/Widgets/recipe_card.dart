@@ -8,6 +8,7 @@ class RecipeCard extends StatelessWidget {
   final bool isFavorite;
 
   const RecipeCard({
+    super.key,
     required this.imagePath,
     required this.title,
     required this.time,
@@ -27,7 +28,7 @@ class RecipeCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 13), // ~5%
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -49,7 +50,7 @@ class RecipeCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 25),
+                const SizedBox(height: 25),
                 Text(
                   title,
                   style: const TextStyle(
