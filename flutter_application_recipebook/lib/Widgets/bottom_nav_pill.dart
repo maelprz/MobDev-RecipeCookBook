@@ -20,7 +20,7 @@ class BottomNavPill extends StatelessWidget {
         borderRadius: BorderRadius.circular(40),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withValues(alpha: 26),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -29,30 +29,10 @@ class BottomNavPill extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _NavItem(
-            icon: Icons.home,
-            index: 0,
-            currentIndex: currentIndex,
-            onTap: onTap,
-          ),
-          _NavItem(
-            icon: Icons.calendar_month,
-            index: 1,
-            currentIndex: currentIndex,
-            onTap: onTap,
-          ),
-          _NavItem(
-            icon: Icons.shopping_cart,
-            index: 2,
-            currentIndex: currentIndex,
-            onTap: onTap,
-          ),
-          _NavItem(
-            icon: Icons.favorite,
-            index: 3,
-            currentIndex: currentIndex,
-            onTap: onTap,
-          ),
+          _NavItem(icon: Icons.home, index: 0, currentIndex: currentIndex, onTap: onTap),
+          _NavItem(icon: Icons.calendar_month, index: 1, currentIndex: currentIndex, onTap: onTap),
+          _NavItem(icon: Icons.shopping_cart, index: 2, currentIndex: currentIndex, onTap: onTap),
+          _NavItem(icon: Icons.favorite, index: 3, currentIndex: currentIndex, onTap: onTap),
         ],
       ),
     );
@@ -74,7 +54,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isActive = index == currentIndex;
+    final isActive = index == currentIndex;
 
     return GestureDetector(
       onTap: () => onTap(index),

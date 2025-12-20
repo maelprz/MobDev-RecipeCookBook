@@ -7,9 +7,11 @@ import '../Widgets/category_pill.dart';
 import '../Widgets/recommendation_pill.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
+
 import 'view_all_categories.dart';
-import 'category_recipe_screen.dart'; // make sure this matches your class file
+import 'category_recipe_screen.dart';
 import 'recipe_details_screen.dart';
+import 'favorites_list_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -21,9 +23,28 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
   bool _showDropdown = false;
-  int _currentIndex = 0;
 
-  void _onNavTap(int index) {
+  int _currentIndex = 0; // 🏠 Home
+
+  void _onNavTap(int index) async {
+    if (index == _currentIndex) return;
+
+    // ❤️ Favorites
+    if (index == 3) {
+      final result = await Navigator.push<int>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const FavoritesListScreen(),
+        ),
+      );
+
+      setState(() {
+        _currentIndex = result ?? 0; // fallback to Home
+      });
+
+      return;
+    }
+
     setState(() => _currentIndex = index);
   }
 
@@ -37,7 +58,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Greeting
             Padding(
               padding: const EdgeInsets.only(left: 25, right: 25, top: 95),
               child: LabelPill(
@@ -50,7 +70,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-            // 🔍 SEARCH BAR + DROPDOWN (ATTACHED)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
               child: Column(
@@ -110,7 +129,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-            // Categories Header
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
@@ -145,7 +163,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-            // Categories List with Navigation
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: SingleChildScrollView(
@@ -153,92 +170,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Row(
                   children: [
                     const SizedBox(width: 25),
-
-                    // Chicken
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                CategoryRecipesScreen(categoryName: 'Chicken'),
-                          ),
-                        );
-                      },
-                      child: const CategoryPill(
-                        image: AssetImage(
-                          'assets/home_screen/category-chicken.jpg',
-                        ),
-                        label: 'Chicken',
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-
-                    // Pork
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                CategoryRecipesScreen(categoryName: 'Pork'),
-                          ),
-                        );
-                      },
-                      child: const CategoryPill(
-                        image: AssetImage(
-                          'assets/home_screen/category-pork.jpg',
-                        ),
-                        label: 'Pork',
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-
-                    // Beef
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                CategoryRecipesScreen(categoryName: 'Beef'),
-                          ),
-                        );
-                      },
-                      child: const CategoryPill(
-                        image: AssetImage(
-                          'assets/home_screen/category-beef.jpg',
-                        ),
-                        label: 'Beef',
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-
-                    // Seafood
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                CategoryRecipesScreen(categoryName: 'Seafood'),
-                          ),
-                        );
-                      },
-                      child: const CategoryPill(
-                        image: AssetImage(
-                          'assets/home_screen/category-seafood.jpg',
-                        ),
-                        label: 'Seafood',
-                      ),
-                    ),
+                    _category(context, 'Chicken', 'assets/home_screen/category-chicken.jpg'),
+                    _category(context, 'Pork', 'assets/home_screen/category-pork.jpg'),
+                    _category(context, 'Beef', 'assets/home_screen/category-beef.jpg'),
+                    _category(context, 'Seafood', 'assets/home_screen/category-seafood.jpg'),
                     const SizedBox(width: 25),
                   ],
                 ),
               ),
             ),
 
-            // Recommended
             const Padding(
               padding: EdgeInsets.only(left: 25, top: 25),
               child: Text(
@@ -255,22 +196,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: const [
                     SizedBox(width: 25),
                     RecommendationPill(
-                      imagePath:
-                          'assets/home_screen/recommendation-grilledChicken.jpg',
+                      imagePath: 'assets/home_screen/recommendation-grilledChicken.jpg',
                       recipeName: 'Grilled Chicken',
                       details: '5 ingredients | 30 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
-                      imagePath:
-                          'assets/home_screen/recommendation-carBonaRa.jpg',
+                      imagePath: 'assets/home_screen/recommendation-carBonaRa.jpg',
                       recipeName: 'Carbonara',
                       details: '8 ingredients | 25 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
-                      imagePath:
-                          'assets/home_screen/recommendation-beefSteak.jpg',
+                      imagePath: 'assets/home_screen/recommendation-beefSteak.jpg',
                       recipeName: 'Beef Steak',
                       details: '7 ingredients | 40 min',
                     ),
@@ -288,6 +226,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,
+      ),
+    );
+  }
+
+  Widget _category(BuildContext context, String name, String asset) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 15),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => CategoryRecipesScreen(categoryName: name),
+            ),
+          );
+        },
+        child: CategoryPill(
+          image: AssetImage(asset),
+          label: name,
+        ),
       ),
     );
   }
