@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../Providers/recipe_providers.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import '../Widgets/filter_pill.dart';
 import '../Widgets/recipe_card.dart';
+import '../Screens/recipe_details_screen.dart';
 
-class JapaneseRecipesScreen extends StatefulWidget {
-  const JapaneseRecipesScreen({super.key});
+class CategoryRecipesScreen extends ConsumerStatefulWidget {
+  final String categoryName;
+
+  const CategoryRecipesScreen({super.key, required this.categoryName});
 
   @override
-  State<JapaneseRecipesScreen> createState() => _JapaneseRecipesScreenState();
+  ConsumerState<CategoryRecipesScreen> createState() =>
+      _CategoryRecipesScreenState();
 }
 
-class _JapaneseRecipesScreenState extends State<JapaneseRecipesScreen> {
+class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
   final TextEditingController searchController = TextEditingController();
   int _currentIndex = 0;
 
   void _onNavTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    setState(() => _currentIndex = index);
 
     switch (index) {
       case 0:
@@ -42,26 +47,20 @@ class _JapaneseRecipesScreenState extends State<JapaneseRecipesScreen> {
     super.dispose();
   }
 
-  final List<Map<String, dynamic>> recipes = const [
-    {
-      'imagePath': 'assets/home_screen/category-japanese.jpg',
-      'title': 'Sushi',
-      'time': '50 min',
-      'difficulty': 'Medium',
-      'isFavorite': false,
-    },
-    {
-      'imagePath': 'assets/home_screen/category-japanese.jpg',
-      'title': 'Ramen',
-      'time': '40 min',
-      'difficulty': 'Medium',
-      'isFavorite': false,
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
-    const categoryTitle = 'Japanese';
+    final categoryTitle = widget.categoryName;
+    final allRecipes = ref.watch(recipesDataProvider);
+
+    // Filter recipes by category and search query
+    final filteredRecipes = allRecipes.where((recipe) {
+      final matchesCategory =
+          recipe.cuisine.toLowerCase() == categoryTitle.toLowerCase();
+      final matchesSearch = recipe.name.toLowerCase().contains(
+        searchController.text.toLowerCase(),
+      );
+      return matchesCategory && matchesSearch;
+    }).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -88,20 +87,18 @@ class _JapaneseRecipesScreenState extends State<JapaneseRecipesScreen> {
               child: SearchBarPill(
                 controller: searchController,
                 hintText: 'Search Recipes',
-                onChanged: (value) {
-                  debugPrint('$categoryTitle search: $value');
-                },
+                onChanged: (_) => setState(() {}),
               ),
             ),
 
             const SizedBox(height: 25),
 
             // Category Title
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Text(
                 categoryTitle,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF002A22),
@@ -125,21 +122,33 @@ class _JapaneseRecipesScreenState extends State<JapaneseRecipesScreen> {
 
             const SizedBox(height: 20),
 
-            // Recipe Cards - optimized
+            // Recipe Cards
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                itemCount: recipes.length,
+                itemCount: filteredRecipes.length,
                 itemBuilder: (context, index) {
-                  final recipe = recipes[index];
+                  final recipe = filteredRecipes[index];
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15),
-                    child: RecipeCard(
-                      imagePath: recipe['imagePath'],
-                      title: recipe['title'],
-                      time: recipe['time'],
-                      difficulty: recipe['difficulty'],
-                      isFavorite: recipe['isFavorite'],
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                RecipeDetailsScreen(recipeId: recipe.id),
+                          ),
+                        );
+                      },
+                      child: RecipeCard(
+                        imagePath: recipe.imagePath,
+                        title: recipe.name,
+                        time: '${recipe.cookingTime} min',
+                        difficulty: recipe.difficulty,
+                        isFavorite: false,
+                      ),
                     ),
                   );
                 },

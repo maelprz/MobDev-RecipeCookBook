@@ -3,18 +3,7 @@ import 'package:flutter/material.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/filter_pill.dart';
 import '../Data/category_data.dart';
-
-// Import all category screens
-import '../Category/chicken_recipes_screen.dart';
-import '../Category/pork_recipes_screen.dart';
-import '../Category/beef_recipes_screen.dart';
-import '../Category/seafood_recipes_screen.dart';
-import '../Category/filipino_recipes_screen.dart';
-import '../Category/italian_recipes_screen.dart';
-import '../Category/mexican_recipes_screen.dart';
-import '../Category/japanese_recipes_screen.dart';
-import '../Category/snacks_recipes_screen.dart';
-import '../Category/desserts_recipes_screen.dart';
+import '../Category/category_recipe_screen.dart';
 
 class ViewAllCategories extends StatefulWidget {
   const ViewAllCategories({super.key});
@@ -32,33 +21,6 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
     });
 
     if (index == 0) Navigator.pop(context);
-  }
-
-  Widget _getCategoryScreen(String name) {
-    switch (name) {
-      case 'Chicken':
-        return const ChickenRecipesScreen();
-      case 'Pork':
-        return const PorkRecipesScreen();
-      case 'Beef':
-        return const BeefRecipesScreen();
-      case 'Seafood':
-        return const SeafoodRecipesScreen();
-      case 'Filipino':
-        return const FilipinoRecipesScreen();
-      case 'Italian':
-        return const ItalianRecipesScreen();
-      case 'Mexican':
-        return const MexicanRecipesScreen();
-      case 'Japanese':
-        return const JapaneseRecipesScreen();
-      case 'Snacks':
-        return const SnacksRecipesScreen();
-      case 'Desserts':
-        return const DessertsRecipesScreen();
-      default:
-        return const SizedBox(); // fallback
-    }
   }
 
   @override
@@ -130,10 +92,13 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
 
                     return GestureDetector(
                       onTap: () {
+                        // Navigate to the reusable CategoryRecipesScreen
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => _getCategoryScreen(category['name']!),
+                            builder: (_) => CategoryRecipesScreen(
+                              categoryName: category['name']!,
+                            ),
                           ),
                         );
                       },

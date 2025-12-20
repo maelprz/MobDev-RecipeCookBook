@@ -22,3 +22,24 @@ final filteredRecipesProvider = Provider<List<Recipe>>((ref) {
     return nameMatch || ingredientMatch;
   }).toList();
 });
+
+final recipeDetailProvider = Provider.family.autoDispose<Recipe, String>((
+  ref,
+  recipeId,
+) {
+  final recipes = ref.watch(recipesDataProvider);
+  return recipes.firstWhere((recipe) => recipe.id == recipeId);
+});
+
+final recipeByIdProvider = Provider.family.autoDispose<Recipe?, String>((
+  ref,
+  id,
+) {
+  final recipes = ref.watch(recipesDataProvider);
+
+  try {
+    return recipes.firstWhere((r) => r.id == id);
+  } catch (_) {
+    return null;
+  }
+});

@@ -8,6 +8,7 @@ import '../Widgets/recommendation_pill.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import 'view_all_categories.dart';
+import 'recipe_details_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -90,8 +91,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               '${recipe.ingredients.length} ingredients • ${recipe.cookingTime} min',
                             ),
                             onTap: () {
-                              searchController.text = recipe.name;
                               setState(() => _showDropdown = false);
+
+                              FocusScope.of(context).unfocus(); // hide keyboard
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      RecipeDetailsScreen(recipeId: recipe.id),
+                                ),
+                              );
                             },
                           );
                         },
