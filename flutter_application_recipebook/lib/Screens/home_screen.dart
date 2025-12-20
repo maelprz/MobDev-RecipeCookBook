@@ -160,12 +160,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => CategoryRecipesScreen(categoryName: 'Chicken'),
+                            builder: (_) =>
+                                CategoryRecipesScreen(categoryName: 'Chicken'),
                           ),
                         );
                       },
                       child: const CategoryPill(
-                        image: AssetImage('assets/home_screen/category-chicken.jpg'),
+                        image: AssetImage(
+                          'assets/home_screen/category-chicken.jpg',
+                        ),
                         label: 'Chicken',
                       ),
                     ),
@@ -177,12 +180,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => CategoryRecipesScreen(categoryName: 'Pork'),
+                            builder: (_) =>
+                                CategoryRecipesScreen(categoryName: 'Pork'),
                           ),
                         );
                       },
                       child: const CategoryPill(
-                        image: AssetImage('assets/home_screen/category-pork.jpg'),
+                        image: AssetImage(
+                          'assets/home_screen/category-pork.jpg',
+                        ),
                         label: 'Pork',
                       ),
                     ),
@@ -194,12 +200,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => CategoryRecipesScreen(categoryName: 'Beef'),
+                            builder: (_) =>
+                                CategoryRecipesScreen(categoryName: 'Beef'),
                           ),
                         );
                       },
                       child: const CategoryPill(
-                        image: AssetImage('assets/home_screen/category-beef.jpg'),
+                        image: AssetImage(
+                          'assets/home_screen/category-beef.jpg',
+                        ),
                         label: 'Beef',
                       ),
                     ),
@@ -211,12 +220,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => CategoryRecipesScreen(categoryName: 'Seafood'),
+                            builder: (_) =>
+                                CategoryRecipesScreen(categoryName: 'Seafood'),
                           ),
                         );
                       },
                       child: const CategoryPill(
-                        image: AssetImage('assets/home_screen/category-seafood.jpg'),
+                        image: AssetImage(
+                          'assets/home_screen/category-seafood.jpg',
+                        ),
                         label: 'Seafood',
                       ),
                     ),
@@ -243,19 +255,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: const [
                     SizedBox(width: 25),
                     RecommendationPill(
-                      imagePath: 'assets/home_screen/recommendation-grilledchicken.jpg',
+                      imagePath:
+                          'assets/home_screen/recommendation-grilledChicken.jpg',
                       recipeName: 'Grilled Chicken',
                       details: '5 ingredients | 30 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
-                      imagePath: 'assets/home_screen/recommendation-carbonara.jpg',
+                      imagePath:
+                          'assets/home_screen/recommendation-carBonaRa.jpg',
                       recipeName: 'Carbonara',
                       details: '8 ingredients | 25 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
-                      imagePath: 'assets/home_screen/recommendation-beefsteak.jpg',
+                      imagePath:
+                          'assets/home_screen/recommendation-beefSteak.jpg',
                       recipeName: 'Beef Steak',
                       details: '7 ingredients | 40 min',
                     ),
