@@ -4,8 +4,8 @@ import '../Models/ingredient.dart';
 final List<Recipe> recipesData = [
   Recipe(
     id: 'r1',
-    name: 'Classic Beef Steak',
-    imagePath: 'assets/home_screen/category-beef.jpg',
+    name: 'Beef Steak',
+    imagePath: 'assets/recipes/r1.jpg',
     mealType: 'Dinner',
     cuisine: 'Beef',
     cookingTime: 40,
@@ -34,7 +34,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r2',
     name: 'Beef Stir Fry',
-    imagePath: 'assets/home_screen/category-beef.jpg',
+    imagePath: 'assets/recipes/r2.jpg',
     mealType: 'Lunch',
     cuisine: 'Beef',
     cookingTime: 25,
@@ -59,7 +59,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r3',
     name: 'Beef Caldereta',
-    imagePath: 'assets/home_screen/category-beef.jpg',
+    imagePath: 'assets/recipes/r3.jpg',
     mealType: 'Dinner',
     cuisine: 'Beef',
     cookingTime: 60,
@@ -83,7 +83,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r4',
     name: 'Beef Burger Patty',
-    imagePath: 'assets/home_screen/category-beef.jpg',
+    imagePath: 'assets/recipes/r4.jpg',
     mealType: 'Snack',
     cuisine: 'Beef',
     cookingTime: 20,
@@ -102,7 +102,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r5',
     name: 'Beef Pepper Steak',
-    imagePath: 'assets/home_screen/category-beef.jpg',
+    imagePath: 'assets/recipes/r5.jpg',
     mealType: 'Dinner',
     cuisine: 'Beef',
     cookingTime: 35,
@@ -127,7 +127,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r6',
     name: 'Garlic Butter Chicken',
-    imagePath: 'assets/home_screen/category-chicken.jpg',
+    imagePath: 'assets/recipes/r6.jpg',
     mealType: 'Dinner',
     cuisine: 'Chicken',
     cookingTime: 30,
@@ -151,7 +151,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r7',
     name: 'Chicken Teriyaki',
-    imagePath: 'assets/home_screen/category-chicken.jpg',
+    imagePath: 'assets/recipes/r7.jpg',
     mealType: 'Lunch',
     cuisine: 'Chicken',
     cookingTime: 25,
@@ -175,7 +175,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r8',
     name: 'Fried Chicken',
-    imagePath: 'assets/home_screen/category-chicken.jpg',
+    imagePath: 'assets/recipes/r8.jpg',
     mealType: 'Dinner',
     cuisine: 'Chicken',
     cookingTime: 45,
@@ -193,8 +193,8 @@ final List<Recipe> recipesData = [
   ),
   Recipe(
     id: 'r9',
-    name: 'Chicken Soup',
-    imagePath: 'assets/home_screen/category-chicken.jpg',
+    name: 'Grilled Chicken',
+    imagePath: 'assets/recipes/r9.jpg',
     mealType: 'Soup',
     cuisine: 'Chicken',
     cookingTime: 40,
@@ -208,7 +208,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r10',
     name: 'Chicken Salad',
-    imagePath: 'assets/home_screen/category-chicken.jpg',
+    imagePath: 'assets/recipes/r10.jpg',
     mealType: 'Lunch',
     cuisine: 'Chicken',
     cookingTime: 20,
@@ -227,7 +227,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r11',
     name: 'Chocolate Cake',
-    imagePath: 'assets/view_all_categories/10desserts.jpg',
+    imagePath: 'assets/recipes/r11.jpg',
     mealType: 'Dessert',
     cuisine: 'Desserts',
     cookingTime: 60,
@@ -246,7 +246,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r12',
     name: 'Vanilla Cupcakes',
-    imagePath: 'assets/view_all_categories/10desserts.jpg',
+    imagePath: 'assets/recipes/r12.jpg',
     mealType: 'Dessert',
     cuisine: 'Desserts',
     cookingTime: 35,
@@ -260,7 +260,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r13',
     name: 'Brownies',
-    imagePath: 'assets/view_all_categories/10desserts.jpg',
+    imagePath: 'assets/recipes/r13.jpg',
     mealType: 'Dessert',
     cuisine: 'Desserts',
     cookingTime: 40,
@@ -278,7 +278,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r14',
     name: 'Fruit Salad',
-    imagePath: 'assets/view_all_categories/10desserts.jpg',
+    imagePath: 'assets/recipes/r14.jpg',
     mealType: 'Dessert',
     cuisine: 'Desserts',
     cookingTime: 15,
@@ -296,7 +296,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r15',
     name: 'Ice Cream Sundae',
-    imagePath: 'assets/view_all_categories/10desserts.jpg',
+    imagePath: 'assets/recipes/r15.jpg',
     mealType: 'Dessert',
     cuisine: 'Desserts',
     cookingTime: 10,
@@ -315,7 +315,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r16',
     name: 'Chicken Adobo',
-    imagePath: 'assets/view_all_categories/5filipino.jpg',
+    imagePath: 'assets/recipes/r16.jpg',
     mealType: 'Dinner',
     cuisine: 'Filipino',
     cookingTime: 50,
@@ -334,7 +334,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r17',
     name: 'Pork Sinigang',
-    imagePath: 'assets/view_all_categories/5filipino.jpg',
+    imagePath: 'assets/recipes/r17.jpg',
     mealType: 'Soup',
     cuisine: 'Filipino',
     cookingTime: 60,
@@ -347,7 +347,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r18',
     name: 'Beef Tapa',
-    imagePath: 'assets/view_all_categories/5filipino.jpg',
+    imagePath: 'assets/recipes/r18.jpg',
     mealType: 'Breakfast',
     cuisine: 'Filipino',
     cookingTime: 30,
@@ -360,7 +360,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r19',
     name: 'Pancit Canton',
-    imagePath: 'assets/view_all_categories/5filipino.jpg',
+    imagePath: 'assets/recipes/r19.jpg',
     mealType: 'Lunch',
     cuisine: 'Filipino',
     cookingTime: 35,
@@ -373,7 +373,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r20',
     name: 'Lumpia',
-    imagePath: 'assets/view_all_categories/5filipino.jpg',
+    imagePath: 'assets/recipes/r20.jpg',
     mealType: 'Snack',
     cuisine: 'Filipino',
     cookingTime: 40,
@@ -391,7 +391,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r21',
     name: 'Spaghetti Bolognese',
-    imagePath: 'assets/view_all_categories/6italian.jpg',
+    imagePath: 'assets/recipes/r21.jpg',
     mealType: 'Dinner',
     cuisine: 'Italian',
     cookingTime: 45,
@@ -415,7 +415,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r22',
     name: 'Carbonara',
-    imagePath: 'assets/view_all_categories/6italian.jpg',
+    imagePath: 'assets/recipes/r22.jpg',
     mealType: 'Dinner',
     cuisine: 'Italian',
     cookingTime: 30,
@@ -429,7 +429,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r23',
     name: 'Lasagna',
-    imagePath: 'assets/view_all_categories/6italian.jpg',
+    imagePath: 'assets/recipes/r23.jpg',
     mealType: 'Dinner',
     cuisine: 'Italian',
     cookingTime: 70,
@@ -447,7 +447,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r24',
     name: 'Bruschetta',
-    imagePath: 'assets/view_all_categories/6italian.jpg',
+    imagePath: 'assets/recipes/r24.jpg',
     mealType: 'Appetizer',
     cuisine: 'Italian',
     cookingTime: 15,
@@ -465,7 +465,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r25',
     name: 'Margherita Pizza',
-    imagePath: 'assets/view_all_categories/6italian.jpg',
+    imagePath: 'assets/recipes/r25.jpg',
     mealType: 'Dinner',
     cuisine: 'Italian',
     cookingTime: 50,
@@ -484,7 +484,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r26',
     name: 'Chicken Katsu',
-    imagePath: 'assets/view_all_categories/8japanese.jpg',
+    imagePath: 'assets/recipes/r26.jpg',
     mealType: 'Dinner',
     cuisine: 'Japanese',
     cookingTime: 35,
@@ -497,7 +497,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r27',
     name: 'Ramen',
-    imagePath: 'assets/view_all_categories/8japanese.jpg',
+    imagePath: 'assets/recipes/r27.jpg',
     mealType: 'Soup',
     cuisine: 'Japanese',
     cookingTime: 45,
@@ -510,7 +510,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r28',
     name: 'Sushi Rolls',
-    imagePath: 'assets/view_all_categories/8japanese.jpg',
+    imagePath: 'assets/recipes/r28.jpg',
     mealType: 'Lunch',
     cuisine: 'Japanese',
     cookingTime: 50,
@@ -523,7 +523,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r29',
     name: 'Tempura',
-    imagePath: 'assets/view_all_categories/8japanese.jpg',
+    imagePath: 'assets/recipes/r29.jpg',
     mealType: 'Appetizer',
     cuisine: 'Japanese',
     cookingTime: 25,
@@ -536,7 +536,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r30',
     name: 'Takoyaki',
-    imagePath: 'assets/view_all_categories/8japanese.jpg',
+    imagePath: 'assets/recipes/r30.jpg',
     mealType: 'Snack',
     cuisine: 'Japanese',
     cookingTime: 30,
@@ -555,7 +555,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r31',
     name: 'Beef Tacos',
-    imagePath: 'assets/view_all_categories/7mexican.jpg',
+    imagePath: 'assets/recipes/r31.jpg',
     mealType: 'Dinner',
     cuisine: 'Mexican',
     cookingTime: 25,
@@ -568,7 +568,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r32',
     name: 'Chicken Quesadilla',
-    imagePath: 'assets/view_all_categories/7mexican.jpg',
+    imagePath: 'assets/recipes/r32.jpg',
     mealType: 'Lunch',
     cuisine: 'Mexican',
     cookingTime: 20,
@@ -581,7 +581,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r33',
     name: 'Nachos',
-    imagePath: 'assets/view_all_categories/7mexican.jpg',
+    imagePath: 'assets/recipes/r33.jpg',
     mealType: 'Snack',
     cuisine: 'Mexican',
     cookingTime: 15,
@@ -599,7 +599,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r34',
     name: 'Burrito',
-    imagePath: 'assets/view_all_categories/7mexican.jpg',
+    imagePath: 'assets/recipes/r34.jpg',
     mealType: 'Lunch',
     cuisine: 'Mexican',
     cookingTime: 30,
@@ -612,7 +612,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r35',
     name: 'Enchiladas',
-    imagePath: 'assets/view_all_categories/7mexican.jpg',
+    imagePath: 'assets/recipes/r35.jpg',
     mealType: 'Dinner',
     cuisine: 'Mexican',
     cookingTime: 40,
@@ -631,7 +631,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r36',
     name: 'Pork Adobo',
-    imagePath: 'assets/home_screen/category-pork.jpg',
+    imagePath: 'assets/recipes/r36.jpg',
     mealType: 'Dinner',
     cuisine: 'Pork',
     cookingTime: 50,
@@ -649,7 +649,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r37',
     name: 'Crispy Pork Belly',
-    imagePath: 'assets/home_screen/category-pork.jpg',
+    imagePath: 'assets/recipes/r37.jpg',
     mealType: 'Dinner',
     cuisine: 'Pork',
     cookingTime: 60,
@@ -667,7 +667,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r38',
     name: 'Pork BBQ',
-    imagePath: 'assets/home_screen/category-pork.jpg',
+    imagePath: 'assets/recipes/r38.jpg',
     mealType: 'Snack',
     cuisine: 'Pork',
     cookingTime: 30,
@@ -685,7 +685,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r39',
     name: 'Pork Chops',
-    imagePath: 'assets/home_screen/category-pork.jpg',
+    imagePath: 'assets/recipes/r39.jpg',
     mealType: 'Dinner',
     cuisine: 'Pork',
     cookingTime: 35,
@@ -703,7 +703,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r40',
     name: 'Sweet and Sour Pork',
-    imagePath: 'assets/home_screen/category-pork.jpg',
+    imagePath: 'assets/recipes/r40.jpg',
     mealType: 'Dinner',
     cuisine: 'Pork',
     cookingTime: 40,
@@ -717,7 +717,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r41',
     name: 'Garlic Shrimp',
-    imagePath: 'assets/home_screen/category-seafood.jpg',
+    imagePath: 'assets/recipes/r41.jpg',
     mealType: 'Dinner',
     cuisine: 'Seafood',
     cookingTime: 15,
@@ -730,7 +730,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r42',
     name: 'Grilled Fish',
-    imagePath: 'assets/home_screen/category-seafood.jpg',
+    imagePath: 'assets/recipes/r42.jpg',
     mealType: 'Dinner',
     cuisine: 'Seafood',
     cookingTime: 25,
@@ -743,7 +743,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r43',
     name: 'Seafood Pasta',
-    imagePath: 'assets/home_screen/category-seafood.jpg',
+    imagePath: 'assets/recipes/r43.jpg',
     mealType: 'Dinner',
     cuisine: 'Seafood',
     cookingTime: 35,
@@ -756,7 +756,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r44',
     name: 'Fish Tacos',
-    imagePath: 'assets/home_screen/category-seafood.jpg',
+    imagePath: 'assets/recipes/r44.jpg',
     mealType: 'Lunch',
     cuisine: 'Seafood',
     cookingTime: 30,
@@ -774,7 +774,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r45',
     name: 'Shrimp Fried Rice',
-    imagePath: 'assets/home_screen/category-seafood.jpg',
+    imagePath: 'assets/recipes/r45.jpg',
     mealType: 'Lunch',
     cuisine: 'Seafood',
     cookingTime: 20,
@@ -788,7 +788,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r46',
     name: 'Garlic Bread',
-    imagePath: 'assets/view_all_categories/9snacks.jpg',
+    imagePath: 'assets/recipes/r46.jpg',
     mealType: 'Snack',
     cuisine: 'Snacks',
     cookingTime: 15,
@@ -806,7 +806,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r47',
     name: 'French Fries',
-    imagePath: 'assets/view_all_categories/9snacks.jpg',
+    imagePath: 'assets/recipes/r47.jpg',
     mealType: 'Snack',
     cuisine: 'Snacks',
     cookingTime: 25,
@@ -824,7 +824,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r48',
     name: 'Chicken Nuggets',
-    imagePath: 'assets/view_all_categories/9snacks.jpg',
+    imagePath: 'assets/recipes/r48.jpg',
     mealType: 'Snack',
     cuisine: 'Snacks',
     cookingTime: 20,
@@ -837,7 +837,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r49',
     name: 'Popcorn',
-    imagePath: 'assets/view_all_categories/9snacks.jpg',
+    imagePath: 'assets/recipes/r49.jpg',
     mealType: 'Snack',
     cuisine: 'Snacks',
     cookingTime: 10,
@@ -855,7 +855,7 @@ final List<Recipe> recipesData = [
   Recipe(
     id: 'r50',
     name: 'Cheese Sticks',
-    imagePath: 'assets/view_all_categories/9snacks.jpg',
+    imagePath: 'assets/recipes/r50.jpg',
     mealType: 'Snack',
     cuisine: 'Snacks',
     cookingTime: 15,
