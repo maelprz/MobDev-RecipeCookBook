@@ -99,7 +99,7 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
 
             // Search Bar
             Padding(
@@ -111,7 +111,7 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
               ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 10),
 
             // Category Title
             Padding(

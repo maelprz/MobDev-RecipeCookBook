@@ -73,7 +73,7 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
               ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 10),
 
             // Categories Header
             const Padding(
