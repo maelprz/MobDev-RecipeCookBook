@@ -257,7 +257,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     RecommendationPill(
                       imagePath: 'assets/home_screen/recommendation-beefsteak.jpg',
                       recipeName: 'Beef Steak',
-                      details: '7 ingredients | 45 min',
+                      details: '7 ingredients | 40 min',
                     ),
                     SizedBox(width: 25),
                   ],
