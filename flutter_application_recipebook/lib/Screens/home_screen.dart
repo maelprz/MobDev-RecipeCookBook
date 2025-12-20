@@ -8,6 +8,7 @@ import '../Widgets/recommendation_pill.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import 'view_all_categories.dart';
+import 'category_recipe_screen.dart'; // make sure this matches your class file
 import 'recipe_details_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -62,7 +63,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     },
                   ),
 
-                  // ✅ DROPDOWN TOUCHES SEARCH BAR
                   if (_showDropdown && searchResults.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
@@ -72,7 +72,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withValues(alpha: 64),
+                            color: Colors.grey.withAlpha(64),
                             blurRadius: 6,
                             offset: const Offset(0, 3),
                           ),
@@ -92,8 +92,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                             onTap: () {
                               setState(() => _showDropdown = false);
-
-                              FocusScope.of(context).unfocus(); // hide keyboard
+                              FocusScope.of(context).unfocus();
 
                               Navigator.push(
                                 context,
@@ -146,37 +145,88 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-            // Categories List
+            // Categories List with Navigation
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: const [
-                    SizedBox(width: 25),
-                    CategoryPill(
-                      image: AssetImage(
-                        'assets/home_screen/category-chicken.jpg',
+                  children: [
+                    const SizedBox(width: 25),
+
+                    // Chicken
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CategoryRecipesScreen(categoryName: 'Chicken'),
+                          ),
+                        );
+                      },
+                      child: const CategoryPill(
+                        image: AssetImage('assets/home_screen/category-chicken.jpg'),
+                        label: 'Chicken',
                       ),
-                      label: 'Chicken',
                     ),
-                    SizedBox(width: 15),
-                    CategoryPill(
-                      image: AssetImage('assets/home_screen/category-pork.jpg'),
-                      label: 'Pork',
+                    const SizedBox(width: 15),
+
+                    // Pork
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CategoryRecipesScreen(categoryName: 'Pork'),
+                          ),
+                        );
+                      },
+                      child: const CategoryPill(
+                        image: AssetImage('assets/home_screen/category-pork.jpg'),
+                        label: 'Pork',
+                      ),
                     ),
-                    SizedBox(width: 15),
-                    CategoryPill(
-                      image: AssetImage('assets/home_screen/category-beef.jpg'),
-                      label: 'Beef',
+                    const SizedBox(width: 15),
+
+                    // Beef
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CategoryRecipesScreen(categoryName: 'Beef'),
+                          ),
+                        );
+                      },
+                      child: const CategoryPill(
+                        image: AssetImage('assets/home_screen/category-beef.jpg'),
+                        label: 'Beef',
+                      ),
                     ),
-                    SizedBox(width: 25),
+                    const SizedBox(width: 15),
+
+                    // Seafood
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CategoryRecipesScreen(categoryName: 'Seafood'),
+                          ),
+                        );
+                      },
+                      child: const CategoryPill(
+                        image: AssetImage('assets/home_screen/category-seafood.jpg'),
+                        label: 'Seafood',
+                      ),
+                    ),
+                    const SizedBox(width: 25),
                   ],
                 ),
               ),
             ),
 
-            // ⭐ RECOMMENDED (STATIC)
+            // Recommended
             const Padding(
               padding: EdgeInsets.only(left: 25, top: 25),
               child: Text(
@@ -193,13 +243,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: const [
                     SizedBox(width: 25),
                     RecommendationPill(
-                      imagePath: 'assets/home_screen/category-chicken.jpg',
+                      imagePath: 'assets/home_screen/recommendation-grilledchicken.jpg',
                       recipeName: 'Grilled Chicken',
                       details: '5 ingredients | 30 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
-                      imagePath: 'assets/home_screen/category-beef.jpg',
+                      imagePath: 'assets/home_screen/recommendation-carbonara.jpg',
+                      recipeName: 'Carbonara',
+                      details: '8 ingredients | 25 min',
+                    ),
+                    SizedBox(width: 15),
+                    RecommendationPill(
+                      imagePath: 'assets/home_screen/recommendation-beefsteak.jpg',
                       recipeName: 'Beef Steak',
                       details: '7 ingredients | 45 min',
                     ),

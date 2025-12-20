@@ -23,6 +23,9 @@ flutter:
     - assets/home_screen/category-chicken.jpg
     - assets/home_screen/category-pork.jpg
     - assets/home_screen/category-seafood.jpg
+    - assets/home_screen/recommendation-beefsteak.jpg
+    - assets/home_screen/recommendation-carbonara.jpg
+    - assets/home_screen/recommendation-grilledchicken.jpg
 
     - assets/view_all_categories/1chicken.jpg
     - assets/view_all_categories/2pork.jpg
