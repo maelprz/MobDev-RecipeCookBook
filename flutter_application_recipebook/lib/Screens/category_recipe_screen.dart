@@ -7,6 +7,8 @@ import '../Widgets/search_bar_pill.dart';
 import '../Widgets/filter_pill.dart';
 import '../Widgets/recipe_card.dart';
 import 'recipe_details_screen.dart';
+import 'favorites_list_screen.dart';
+import 'home_screen.dart';
 
 class CategoryRecipesScreen extends ConsumerStatefulWidget {
   final String categoryName;
@@ -23,11 +25,18 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
   int _currentIndex = 0;
 
   void _onNavTap(int index) {
+    if (index == _currentIndex) return;
+
     setState(() => _currentIndex = index);
 
     switch (index) {
       case 0:
-        Navigator.pop(context);
+        // Go back to HomeScreen directly
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          (route) => false,
+        );
         break;
       case 1:
         debugPrint('Meal Plan tapped');
@@ -36,7 +45,12 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
         debugPrint('Cart tapped');
         break;
       case 3:
-        debugPrint('Favorites tapped');
+        // Navigate to FavoritesListScreen, removing intermediate screens
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const FavoritesListScreen()),
+          (route) => false,
+        );
         break;
     }
   }
@@ -56,9 +70,9 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
     final filteredRecipes = allRecipes.where((recipe) {
       final matchesCategory =
           recipe.cuisine.toLowerCase() == categoryTitle.toLowerCase();
-      final matchesSearch = recipe.name.toLowerCase().contains(
-        searchController.text.toLowerCase(),
-      );
+      final matchesSearch = recipe.name
+          .toLowerCase()
+          .contains(searchController.text.toLowerCase());
       return matchesCategory && matchesSearch;
     }).toList();
 
@@ -70,12 +84,18 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
           children: [
             const SizedBox(height: 10),
 
-            // Back Button
+            // Back Button → always goes back to HomeScreen
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Color(0xFF002A22)),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => const HomeScreen()),
+                    (route) => false,
+                  );
+                },
               ),
             ),
 
@@ -157,6 +177,8 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
           ],
         ),
       ),
+
+      // Bottom Navigation
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,
