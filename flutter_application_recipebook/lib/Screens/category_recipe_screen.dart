@@ -6,7 +6,7 @@ import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import '../Widgets/filter_pill.dart';
 import '../Widgets/recipe_card.dart';
-import '../Screens/recipe_details_screen.dart';
+import 'recipe_details_screen.dart';
 
 class CategoryRecipesScreen extends ConsumerStatefulWidget {
   final String categoryName;

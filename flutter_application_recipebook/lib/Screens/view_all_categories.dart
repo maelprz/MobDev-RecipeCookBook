@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/filter_pill.dart';
 import '../Data/category_data.dart';
-import '../Category/category_recipe_screen.dart';
+import 'category_recipe_screen.dart';
 
 class ViewAllCategories extends StatefulWidget {
   const ViewAllCategories({super.key});
