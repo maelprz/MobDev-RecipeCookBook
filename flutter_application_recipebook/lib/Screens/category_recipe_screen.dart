@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Providers/recipe_providers.dart';
 import '../Providers/favorites_provider.dart';
+import '../Providers/ratings_provider.dart';
 import '../Models/filter_state.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
@@ -28,7 +29,6 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
 
   void _onNavTap(int index) {
     if (index == _currentIndex) return;
-
     setState(() => _currentIndex = index);
 
     switch (index) {
@@ -64,8 +64,8 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
   @override
   Widget build(BuildContext context) {
     final categoryTitle = widget.categoryName;
-
     final recipes = ref.watch(filteredRecipesProvider);
+    final ratings = ref.watch(ratingsProvider);
 
     final categoryRecipes = recipes.where((recipe) {
       return recipe.cuisine.toLowerCase() == categoryTitle.toLowerCase();
@@ -80,8 +80,6 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-
-            // ⬅ Back to Home
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: IconButton(
@@ -95,10 +93,7 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
                 },
               ),
             ),
-
             const SizedBox(height: 5),
-
-            // 🔍 Search Bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: SearchBarPill(
@@ -109,10 +104,7 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
                 },
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // 🏷 Category Title
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Text(
@@ -124,10 +116,7 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // 🎛 SORT FILTER PILLS
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
@@ -152,10 +141,7 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
-
-            // 🍽 Recipe List
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -163,30 +149,26 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
                 itemBuilder: (context, index) {
                   final recipe = categoryRecipes[index];
                   final isFavorite = favoriteIds.contains(recipe.id);
+                  final recipeRating = ratings[recipe.id] ?? 0;
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: RecipeCard(
-                      imagePath: recipe.imagePath,
-                      title: recipe.name,
-                      time: '${recipe.cookingTime} min',
-                      difficulty: recipe.difficulty,
-                      isFavorite: isFavorite,
-                      onFavoriteTap: () {
-                        ref
-                            .read(favoritesProvider.notifier)
-                            .toggleFavorite(recipe.id);
-                      },
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                RecipeDetailsScreen(recipeId: recipe.id),
-                          ),
-                        );
-                      },
-                    ),
+                  return RecipeCard(
+                    imagePath: recipe.imagePath,
+                    title: recipe.name,
+                    time: '${recipe.cookingTime} min',
+                    difficulty: recipe.difficulty,
+                    isFavorite: isFavorite,
+                    rating: recipeRating,
+                    onFavoriteTap: () {
+                      ref.read(favoritesProvider.notifier).toggleFavorite(recipe.id);
+                    },
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RecipeDetailsScreen(recipeId: recipe.id),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -194,7 +176,6 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
           ],
         ),
       ),
-
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,
