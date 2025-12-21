@@ -12,6 +12,7 @@ import 'view_all_categories.dart';
 import 'category_recipe_screen.dart';
 import 'recipe_details_screen.dart';
 import 'favorites_list_screen.dart';
+import '../Screens/meal_plan_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -28,14 +29,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _onNavTap(int index) async {
     if (index == _currentIndex) return;
+    if (index == 1) {
+      final result = await Navigator.push<int>(
+        context,
+        MaterialPageRoute(builder: (_) => const MealPlanScreen()),
+      );
+
+      setState(() {
+        _currentIndex = result ?? 0; // fallback to Home
+      });
+
+      return;
+    }
 
     // ❤️ Favorites
     if (index == 3) {
       final result = await Navigator.push<int>(
         context,
-        MaterialPageRoute(
-          builder: (_) => const FavoritesListScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const FavoritesListScreen()),
       );
 
       setState(() {
@@ -170,10 +181,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Row(
                   children: [
                     const SizedBox(width: 25),
-                    _category(context, 'Chicken', 'assets/home_screen/category-chicken.jpg'),
-                    _category(context, 'Pork', 'assets/home_screen/category-pork.jpg'),
-                    _category(context, 'Beef', 'assets/home_screen/category-beef.jpg'),
-                    _category(context, 'Seafood', 'assets/home_screen/category-seafood.jpg'),
+                    _category(
+                      context,
+                      'Chicken',
+                      'assets/home_screen/category-chicken.jpg',
+                    ),
+                    _category(
+                      context,
+                      'Pork',
+                      'assets/home_screen/category-pork.jpg',
+                    ),
+                    _category(
+                      context,
+                      'Beef',
+                      'assets/home_screen/category-beef.jpg',
+                    ),
+                    _category(
+                      context,
+                      'Seafood',
+                      'assets/home_screen/category-seafood.jpg',
+                    ),
                     const SizedBox(width: 25),
                   ],
                 ),
@@ -196,19 +223,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: const [
                     SizedBox(width: 25),
                     RecommendationPill(
-                      imagePath: 'assets/home_screen/recommendation-grilledChicken.jpg',
+                      imagePath:
+                          'assets/home_screen/recommendation-grilledChicken.jpg',
                       recipeName: 'Grilled Chicken',
                       details: '5 ingredients | 30 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
-                      imagePath: 'assets/home_screen/recommendation-carBonaRa.jpg',
+                      imagePath:
+                          'assets/home_screen/recommendation-carBonaRa.jpg',
                       recipeName: 'Carbonara',
                       details: '8 ingredients | 25 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
-                      imagePath: 'assets/home_screen/recommendation-beefSteak.jpg',
+                      imagePath:
+                          'assets/home_screen/recommendation-beefSteak.jpg',
                       recipeName: 'Beef Steak',
                       details: '7 ingredients | 40 min',
                     ),
@@ -242,10 +272,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           );
         },
-        child: CategoryPill(
-          image: AssetImage(asset),
-          label: name,
-        ),
+        child: CategoryPill(image: AssetImage(asset), label: name),
       ),
     );
   }
