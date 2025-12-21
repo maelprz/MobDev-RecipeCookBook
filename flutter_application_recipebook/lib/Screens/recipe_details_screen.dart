@@ -1,15 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../Providers/recipe_providers.dart';
 
-class RecipeDetailsScreen extends ConsumerWidget {
+import '../Providers/recipe_providers.dart';
+import '../Widgets/bottom_nav_pill.dart';
+import 'home_screen.dart';
+import 'favorites_list_screen.dart';
+
+class RecipeDetailsScreen extends ConsumerStatefulWidget {
   final String recipeId;
 
   const RecipeDetailsScreen({super.key, required this.recipeId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final recipe = ref.watch(recipeDetailProvider(recipeId));
+  ConsumerState<RecipeDetailsScreen> createState() =>
+      _RecipeDetailsScreenState();
+}
+
+class _RecipeDetailsScreenState
+    extends ConsumerState<RecipeDetailsScreen> {
+  int _currentIndex = 0;
+
+  void _onNavTap(int index) {
+    if (index == _currentIndex) return;
+
+    setState(() => _currentIndex = index);
+
+    switch (index) {
+      case 0:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          (route) => false,
+        );
+        break;
+      case 1:
+        debugPrint('Meal Plan tapped');
+        break;
+      case 2:
+        debugPrint('Cart tapped');
+        break;
+      case 3:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const FavoritesListScreen()),
+          (route) => false,
+        );
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final recipe =
+        ref.watch(recipeDetailProvider(widget.recipeId));
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -18,23 +61,18 @@ class RecipeDetailsScreen extends ConsumerWidget {
           children: [
             /// SCROLL CONTENT
             SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 90),
+              padding: const EdgeInsets.only(bottom: 110),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 🖼 IMAGE HEADER
                   Stack(
                     children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          bottom: Radius.circular(30),
-                        ),
-                        child: Image.asset(
-                          recipe.imagePath,
-                          height: 280,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
+                      Image.asset(
+                        recipe.imagePath,
+                        height: 410,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
                       ),
 
                       // BACK BUTTON
@@ -47,7 +85,7 @@ class RecipeDetailsScreen extends ConsumerWidget {
                         ),
                       ),
 
-                      // FAVORITE BUTTON (placeholder)
+                      // FAVORITE BUTTON
                       Positioned(
                         top: 16,
                         right: 16,
@@ -59,125 +97,116 @@ class RecipeDetailsScreen extends ConsumerWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 50),
 
                   // 🍽 RECIPE CARD
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            recipe.name,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF002A22),
+                  Transform.translate(
+                    offset: const Offset(0, -100),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color:
+                                  Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 6,
+                              offset: const Offset(0, 3),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '${recipe.ingredients.length} ingredients',
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.schedule, size: 16),
-                              const SizedBox(width: 4),
-                              Text('${recipe.cookingTime} min'),
-                              const SizedBox(width: 12),
-                              const Icon(Icons.bar_chart, size: 16),
-                              const SizedBox(width: 4),
-                              Text(recipe.difficulty),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              recipe.name,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xFF002A22),
+                              ),
+                            ),
+                            Text(
+                              '${recipe.ingredients.length} ingredients',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.schedule, size: 16),
+                                const SizedBox(width: 4),
+                                Text('${recipe.cookingTime} min'),
+                                const SizedBox(width: 12),
+                                const Icon(Icons.bar_chart, size: 16),
+                                const SizedBox(width: 4),
+                                Text(recipe.difficulty),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 20),
 
                   // 🧺 INGREDIENTS
-                  _SectionCard(
-                    title: 'Ingredients',
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: recipe.ingredients.map((ingredient) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 2),
-                          child: Text(
-                            '• ${ingredient.name} (${ingredient.quantity}${ingredient.unit})',
-                          ),
-                        );
-                      }).toList(),
+                  Transform.translate(
+                    offset: const Offset(0, -85),
+                    child: _SectionCard(
+                      title: 'Ingredients',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: recipe.ingredients.map((ingredient) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Text(
+                              '• ${ingredient.name} (${ingredient.quantity}${ingredient.unit})',
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
 
-                  const SizedBox(height: 16),
-
                   // 📋 INSTRUCTIONS
-                  _SectionCard(
-                    title: 'Instructions',
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: recipe.steps.asMap().entries.map((entry) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text('${entry.key + 1}. ${entry.value}'),
-                        );
-                      }).toList(),
+                  Transform.translate(
+                    offset: const Offset(0, -70),
+                    child: _SectionCard(
+                      title: 'Instructions',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: recipe.steps
+                            .asMap()
+                            .entries
+                            .map((entry) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                                '${entry.key + 1}. ${entry.value}'),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-
-            /// ⬇ BOTTOM ACTION BAR
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.01),
-                      blurRadius: 6,
-                      offset: const Offset(0, -3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Icon(Icons.arrow_back_ios),
-                    Icon(Icons.note_alt_outlined),
-                    Icon(Icons.shopping_cart_outlined),
-                    Icon(Icons.favorite_border),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
+      ),
+
+      /// ⬇ BOTTOM NAV PILL (INTEGRATED)
+      bottomNavigationBar: BottomNavPill(
+        currentIndex: _currentIndex,
+        onTap: _onNavTap,
       ),
     );
   }
@@ -187,7 +216,10 @@ class _CircleButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _CircleButton({required this.icon, required this.onTap});
+  const _CircleButton({
+    required this.icon,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +238,10 @@ class _SectionCard extends StatelessWidget {
   final String title;
   final Widget child;
 
-  const _SectionCard({required this.title, required this.child});
+  const _SectionCard({
+    required this.title,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
