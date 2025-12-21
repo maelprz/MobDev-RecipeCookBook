@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Providers/favorites_provider.dart';
 import '../Providers/recipe_providers.dart';
+import '../Models/filter_state.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import '../Widgets/filter_pill.dart';
@@ -26,12 +27,20 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
     if (index == _currentIndex) return;
     setState(() => _currentIndex = index);
 
-    if (index == 0) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-        (route) => false,
-      );
+    switch (index) {
+      case 0:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          (route) => false,
+        );
+        break;
+      case 1:
+        debugPrint('Meal Plan tapped');
+        break;
+      case 2:
+        debugPrint('Cart tapped');
+        break;
     }
   }
 
@@ -43,10 +52,35 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final allRecipes = ref.watch(filteredRecipesProvider);
     final favoriteIds = ref.watch(favoritesProvider);
-    final allRecipes = ref.watch(recipesDataProvider);
-    final favoriteRecipes =
+
+    // Filter only favorite recipes
+    List favoriteRecipes =
         allRecipes.where((r) => favoriteIds.contains(r.id)).toList();
+
+    // Apply search query
+    final searchQuery = ref.watch(searchQueryProvider);
+    if (searchQuery.isNotEmpty) {
+      favoriteRecipes = favoriteRecipes
+          .where(
+            (r) => r.name.toLowerCase().contains(searchQuery.toLowerCase()),
+          )
+          .toList();
+    }
+
+    // Apply sort option
+    final sortOption = ref.watch(recipeFiltersProvider).sortOption;
+    favoriteRecipes.sort((a, b) {
+      switch (sortOption) {
+        case SortOption.cookingTime:
+          return a.cookingTime.compareTo(b.cookingTime);
+        case SortOption.difficulty:
+          return a.difficulty.compareTo(b.difficulty);
+        case SortOption.none:
+          return 0;
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,13 +107,15 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
 
             const SizedBox(height: 5),
 
-            // Search Bar (UI only)
+            // Search Bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: SearchBarPill(
                 controller: searchController,
                 hintText: 'Search Favorites',
-                onChanged: (_) {},
+                onChanged: (value) {
+                  ref.read(searchQueryProvider.notifier).state = value;
+                },
               ),
             ),
 
@@ -100,14 +136,28 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
 
             const SizedBox(height: 10),
 
-            // Filter Pills (UI only)
+            // Filter Pills
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
-                children: const [
-                  FilterPill(label: 'Time'),
-                  SizedBox(width: 10),
-                  FilterPill(label: 'Difficulty'),
+                children: [
+                  FilterPill(
+                    label: 'Time',
+                    onTap: () {
+                      ref
+                          .read(recipeFiltersProvider.notifier)
+                          .setSortOption(SortOption.cookingTime);
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  FilterPill(
+                    label: 'Difficulty',
+                    onTap: () {
+                      ref
+                          .read(recipeFiltersProvider.notifier)
+                          .setSortOption(SortOption.difficulty);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -129,17 +179,8 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
                       itemBuilder: (context, index) {
                         final recipe = favoriteRecipes[index];
 
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => RecipeDetailsScreen(
-                                  recipeId: recipe.id,
-                                ),
-                              ),
-                            );
-                          },
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
                           child: RecipeCard(
                             imagePath: recipe.imagePath,
                             title: recipe.name,
@@ -150,6 +191,15 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
                               ref
                                   .read(favoritesProvider.notifier)
                                   .toggleFavorite(recipe.id);
+                            },
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      RecipeDetailsScreen(recipeId: recipe.id),
+                                ),
+                              );
                             },
                           ),
                         );
