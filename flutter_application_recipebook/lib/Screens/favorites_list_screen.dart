@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../Providers/favorites_provider.dart';
+import '../Providers/recipe_providers.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import '../Widgets/filter_pill.dart';
+import '../Widgets/recipe_card.dart';
 import 'home_screen.dart';
+import 'recipe_details_screen.dart';
 
-class FavoritesListScreen extends StatefulWidget {
+class FavoritesListScreen extends ConsumerStatefulWidget {
   const FavoritesListScreen({super.key});
 
   @override
-  State<FavoritesListScreen> createState() => _FavoritesListScreenState();
+  ConsumerState<FavoritesListScreen> createState() =>
+      _FavoritesListScreenState();
 }
 
-class _FavoritesListScreenState extends State<FavoritesListScreen> {
+class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
   final TextEditingController searchController = TextEditingController();
-  int _currentIndex = 3; // ❤️ Favorites
+  int _currentIndex = 3;
 
   void _onNavTap(int index) {
     if (index == _currentIndex) return;
-
     setState(() => _currentIndex = index);
 
     if (index == 0) {
-      // Go directly to HomeScreen, removing current route
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -39,6 +43,11 @@ class _FavoritesListScreenState extends State<FavoritesListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final favoriteIds = ref.watch(favoritesProvider);
+    final allRecipes = ref.watch(recipesDataProvider);
+    final favoriteRecipes =
+        allRecipes.where((r) => favoriteIds.contains(r.id)).toList();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -47,7 +56,7 @@ class _FavoritesListScreenState extends State<FavoritesListScreen> {
           children: [
             const SizedBox(height: 10),
 
-            // Back Button → always goes to HomeScreen
+            // Back button
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: IconButton(
@@ -70,7 +79,7 @@ class _FavoritesListScreenState extends State<FavoritesListScreen> {
               child: SearchBarPill(
                 controller: searchController,
                 hintText: 'Search Favorites',
-                onChanged: (_) {}, // no functionality yet
+                onChanged: (_) {},
               ),
             ),
 
@@ -105,14 +114,47 @@ class _FavoritesListScreenState extends State<FavoritesListScreen> {
 
             const SizedBox(height: 20),
 
-            // Placeholder for favorite recipes
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'Your favorite recipes will appear here',
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
-                ),
-              ),
+            // Favorites List
+            Expanded(
+              child: favoriteRecipes.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No favorites yet ❤️',
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      itemCount: favoriteRecipes.length,
+                      itemBuilder: (context, index) {
+                        final recipe = favoriteRecipes[index];
+
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => RecipeDetailsScreen(
+                                  recipeId: recipe.id,
+                                ),
+                              ),
+                            );
+                          },
+                          child: RecipeCard(
+                            imagePath: recipe.imagePath,
+                            title: recipe.name,
+                            time: '${recipe.cookingTime} min',
+                            difficulty: recipe.difficulty,
+                            isFavorite: favoriteIds.contains(recipe.id),
+                            onFavoriteTap: () {
+                              ref
+                                  .read(favoritesProvider.notifier)
+                                  .toggleFavorite(recipe.id);
+                            },
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
         ),

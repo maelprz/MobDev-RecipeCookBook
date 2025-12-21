@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Providers/recipe_providers.dart';
+import '../Providers/favorites_provider.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import 'home_screen.dart';
 import 'favorites_list_screen.dart';
@@ -51,15 +52,17 @@ class _RecipeDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final recipe =
-        ref.watch(recipeDetailProvider(widget.recipeId));
+    final recipe = ref.watch(recipeDetailProvider(widget.recipeId));
+
+    // WATCH favoritesProvider so UI updates automatically
+    final favorites = ref.watch(favoritesProvider);
+    final isFavorite = favorites.contains(widget.recipeId);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
         child: Stack(
           children: [
-            /// SCROLL CONTENT
             SingleChildScrollView(
               padding: const EdgeInsets.only(bottom: 110),
               child: Column(
@@ -74,8 +77,6 @@ class _RecipeDetailsScreenState
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
-
-                      // BACK BUTTON
                       Positioned(
                         top: 16,
                         left: 16,
@@ -84,14 +85,19 @@ class _RecipeDetailsScreenState
                           onTap: () => Navigator.pop(context),
                         ),
                       ),
-
-                      // FAVORITE BUTTON
                       Positioned(
                         top: 16,
                         right: 16,
                         child: _CircleButton(
-                          icon: Icons.favorite_border,
-                          onTap: () {},
+                          icon: isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          iconColor: isFavorite ? Colors.red : Colors.black,
+                          onTap: () {
+                            ref
+                                .read(favoritesProvider.notifier)
+                                .toggleFavorite(widget.recipeId);
+                          },
                         ),
                       ),
                     ],
@@ -111,8 +117,7 @@ class _RecipeDetailsScreenState
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  Colors.black.withValues(alpha: 0.08),
+                              color: Colors.black.withValues(alpha: 0.08),
                               blurRadius: 6,
                               offset: const Offset(0, 3),
                             ),
@@ -138,8 +143,7 @@ class _RecipeDetailsScreenState
                             ),
                             const SizedBox(height: 5),
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Icon(Icons.schedule, size: 16),
                                 const SizedBox(width: 4),
@@ -187,10 +191,8 @@ class _RecipeDetailsScreenState
                             .entries
                             .map((entry) {
                           return Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                                '${entry.key + 1}. ${entry.value}'),
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text('${entry.key + 1}. ${entry.value}'),
                           );
                         }).toList(),
                       ),
@@ -203,7 +205,7 @@ class _RecipeDetailsScreenState
         ),
       ),
 
-      /// ⬇ BOTTOM NAV PILL (INTEGRATED)
+      // BOTTOM NAV PILL
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,
@@ -214,11 +216,13 @@ class _RecipeDetailsScreenState
 
 class _CircleButton extends StatelessWidget {
   final IconData icon;
+  final Color iconColor;
   final VoidCallback onTap;
 
   const _CircleButton({
     required this.icon,
     required this.onTap,
+    this.iconColor = Colors.black,
   });
 
   @override
@@ -228,7 +232,7 @@ class _CircleButton extends StatelessWidget {
       child: CircleAvatar(
         backgroundColor: Colors.white,
         radius: 20,
-        child: Icon(icon, color: Colors.black),
+        child: Icon(icon, color: iconColor),
       ),
     );
   }

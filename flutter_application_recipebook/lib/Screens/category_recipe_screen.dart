@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Providers/recipe_providers.dart';
+import '../Providers/favorites_provider.dart';
 import '../Models/filter_state.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
@@ -64,13 +65,13 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
   Widget build(BuildContext context) {
     final categoryTitle = widget.categoryName;
 
-    // 🔹 Use COMPUTED provider (sorting + filtering works)
     final recipes = ref.watch(filteredRecipesProvider);
 
-    // 🔹 Category-specific filtering (lightweight & correct)
     final categoryRecipes = recipes.where((recipe) {
       return recipe.cuisine.toLowerCase() == categoryTitle.toLowerCase();
     }).toList();
+
+    final favoriteIds = ref.watch(favoritesProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -97,7 +98,7 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
 
             const SizedBox(height: 5),
 
-            // 🔍 Search Bar (connected to provider)
+            // 🔍 Search Bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: SearchBarPill(
@@ -161,10 +162,21 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
                 itemCount: categoryRecipes.length,
                 itemBuilder: (context, index) {
                   final recipe = categoryRecipes[index];
+                  final isFavorite = favoriteIds.contains(recipe.id);
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15),
-                    child: GestureDetector(
+                    child: RecipeCard(
+                      imagePath: recipe.imagePath,
+                      title: recipe.name,
+                      time: '${recipe.cookingTime} min',
+                      difficulty: recipe.difficulty,
+                      isFavorite: isFavorite,
+                      onFavoriteTap: () {
+                        ref
+                            .read(favoritesProvider.notifier)
+                            .toggleFavorite(recipe.id);
+                      },
                       onTap: () {
                         Navigator.push(
                           context,
@@ -174,13 +186,6 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
                           ),
                         );
                       },
-                      child: RecipeCard(
-                        imagePath: recipe.imagePath,
-                        title: recipe.name,
-                        time: '${recipe.cookingTime} min',
-                        difficulty: recipe.difficulty,
-                        isFavorite: false,
-                      ),
                     ),
                   );
                 },
