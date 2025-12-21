@@ -7,6 +7,7 @@ import '../Providers/ratings_provider.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import 'home_screen.dart';
 import 'favorites_list_screen.dart';
+import 'meal_plan_screen.dart';
 
 class RecipeDetailsScreen extends ConsumerStatefulWidget {
   final String recipeId;
@@ -34,7 +35,11 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
         );
         break;
       case 1:
-        debugPrint('Meal Plan tapped');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const MealPlanScreen()),
+          (route) => false,
+        );
         break;
       case 2:
         debugPrint('Cart tapped');
@@ -65,7 +70,6 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // IMAGE HEADER
               Stack(
                 children: [
                   Image.asset(
@@ -89,20 +93,17 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
                       icon: isFavorite ? Icons.favorite : Icons.favorite_border,
                       iconColor: isFavorite ? Colors.red : Colors.black,
                       onTap: () {
-                        ref
-                            .read(favoritesProvider.notifier)
+                        ref.read(favoritesProvider.notifier)
                             .toggleFavorite(widget.recipeId);
                       },
                     ),
                   ),
                 ],
               ),
-
-              // RECIPE CARD
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Transform.translate(
-                  offset: const Offset(0, -80), // safe negative offset
+                  offset: const Offset(0, -80),
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -160,8 +161,7 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
                                 color: Colors.amber,
                               ),
                               onPressed: () {
-                                ref
-                                    .read(ratingsProvider.notifier)
+                                ref.read(ratingsProvider.notifier)
                                     .setRating(widget.recipeId, starIndex);
                               },
                             );
@@ -172,8 +172,6 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
                   ),
                 ),
               ),
-
-              // INGREDIENTS
               Transform.translate(
                 offset: const Offset(0, -65),
                 child: Padding(
@@ -194,8 +192,6 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
                   ),
                 ),
               ),
-
-              // INSTRUCTIONS
               Transform.translate(
                 offset: const Offset(0, -70),
                 child: Padding(

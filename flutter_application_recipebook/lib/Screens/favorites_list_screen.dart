@@ -9,8 +9,9 @@ import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import '../Widgets/filter_pill.dart';
 import '../Widgets/recipe_card.dart';
-import 'home_screen.dart';
 import 'recipe_details_screen.dart';
+import 'home_screen.dart';
+import 'meal_plan_screen.dart';
 
 class FavoritesListScreen extends ConsumerStatefulWidget {
   const FavoritesListScreen({super.key});
@@ -22,23 +23,28 @@ class FavoritesListScreen extends ConsumerStatefulWidget {
 
 class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
   final TextEditingController searchController = TextEditingController();
-  int _currentIndex = 3;
+  final int _currentIndex = 3;
 
   void _onNavTap(int index) {
     if (index == _currentIndex) return;
-    setState(() => _currentIndex = index);
 
     switch (index) {
       case 0:
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
-          (route) => false,
+          (_) => false,
         );
         break;
+
       case 1:
-        debugPrint('Meal Plan tapped');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const MealPlanScreen()),
+          (_) => false,
+        );
         break;
+
       case 2:
         debugPrint('Cart tapped');
         break;
@@ -190,7 +196,7 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
                             time: '${recipe.cookingTime} min',
                             difficulty: recipe.difficulty,
                             isFavorite: favoriteIds.contains(recipe.id),
-                            rating: recipeRating, // <-- show stars
+                            rating: recipeRating,
                             onFavoriteTap: () {
                               ref
                                   .read(favoritesProvider.notifier)

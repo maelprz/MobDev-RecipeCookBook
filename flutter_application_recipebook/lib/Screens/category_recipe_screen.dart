@@ -12,6 +12,7 @@ import '../Widgets/recipe_card.dart';
 import 'recipe_details_screen.dart';
 import 'favorites_list_screen.dart';
 import 'home_screen.dart';
+import 'meal_plan_screen.dart';
 
 class CategoryRecipesScreen extends ConsumerStatefulWidget {
   final String categoryName;
@@ -40,7 +41,11 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
         );
         break;
       case 1:
-        debugPrint('Meal Plan tapped');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const MealPlanScreen()),
+          (route) => false,
+        );
         break;
       case 2:
         debugPrint('Cart tapped');

@@ -63,7 +63,7 @@ class _NavItem extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isActive
-              ? const Color.fromARGB(255, 29, 81, 32)
+              ? const Color.from(alpha: 1, red: 0.114, green: 0.318, blue: 0.125)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
         ),

@@ -6,6 +6,7 @@ import '../Data/category_data.dart';
 import 'category_recipe_screen.dart';
 import 'favorites_list_screen.dart';
 import 'home_screen.dart';
+import 'meal_plan_screen.dart';
 
 class ViewAllCategories extends StatefulWidget {
   const ViewAllCategories({super.key});
@@ -19,12 +20,10 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
 
   void _onNavTap(int index) {
     if (index == _currentIndex) return;
-
     setState(() => _currentIndex = index);
 
     switch (index) {
       case 0:
-        // Go back to HomeScreen
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -32,13 +31,16 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
         );
         break;
       case 1:
-        debugPrint('Meal Plan tapped');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const MealPlanScreen()),
+          (route) => false,
+        );
         break;
       case 2:
         debugPrint('Cart tapped');
         break;
       case 3:
-        // Navigate to FavoritesListScreen
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const FavoritesListScreen()),
@@ -57,8 +59,6 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-
-            // Back Button → always returns to HomeScreen
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: IconButton(
@@ -72,10 +72,7 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
                 },
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // Categories Header
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
               child: Text(
@@ -87,10 +84,7 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
                 ),
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // Filter Pills
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Wrap(
@@ -103,10 +97,7 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
-
-            // Category Grid
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -120,7 +111,6 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
                   ),
                   itemBuilder: (context, index) {
                     final category = categories[index];
-
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -182,8 +172,6 @@ class _ViewAllCategoriesState extends State<ViewAllCategories> {
           ],
         ),
       ),
-
-      // Bottom Navigation
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,

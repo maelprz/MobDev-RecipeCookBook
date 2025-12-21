@@ -1,4 +1,3 @@
-// Screens/meal_plan_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,7 +19,7 @@ class MealPlanScreen extends ConsumerStatefulWidget {
 
 class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
   String selectedDay = 'Monday';
-  int _currentIndex = 1; // ✅ Meal Plan
+  final int _currentIndex = 1;
 
   final List<String> days = const [
     'Monday',
@@ -43,7 +42,6 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
           (_) => false,
         );
         break;
-
       case 3:
         Navigator.pushAndRemoveUntil(
           context,
@@ -59,13 +57,13 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
 
     final selected = await showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // ✅ allows taller modal
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
         return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.85, // ✅ BIGGER
+          height: MediaQuery.of(context).size.height * 0.85,
           child: MealRecipePickerScreen(recipes: recipes),
         );
       },
@@ -85,18 +83,31 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Meal Plan'),
         backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF002A22),
         elevation: 0,
-        leading: BackButton(onPressed: () => Navigator.pop(context)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF002A22)),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+              (route) => false,
+            );
+          },
+        ),
+        title: const Text(
+          'Meal Plan',
+          style: TextStyle(
+            color: Color(0xFF002A22),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: SafeArea(
         child: Column(
           children: [
             const SizedBox(height: 12),
-
-            // Days selector
             SizedBox(
               height: 40,
               child: ListView.separated(
@@ -117,7 +128,7 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
                       ),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? const Color(0xFF002A22)
+                            ? const Color(0xFF1D5120)
                             : Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -132,9 +143,7 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
                 },
               ),
             ),
-
             const SizedBox(height: 16),
-
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
