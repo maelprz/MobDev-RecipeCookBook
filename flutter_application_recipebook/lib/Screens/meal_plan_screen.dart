@@ -1,3 +1,4 @@
+// Screens/meal_plan_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -76,6 +77,14 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
     }
   }
 
+  void _removeRecipe(String mealType, dynamic mealPlanRecipe) {
+    ref.read(mealPlanProvider.notifier).removeMeal(
+          day: selectedDay,
+          mealType: mealType,
+          recipe: mealPlanRecipe.recipe,
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mealPlan = ref.watch(mealPlanProvider)[selectedDay]!;
@@ -152,16 +161,20 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
                     title: 'Breakfast',
                     recipes: mealPlan.breakfast,
                     onAddPressed: () => _pickRecipe('breakfast'),
+                    onRemovePressed: (recipe) =>
+                        _removeRecipe('breakfast', recipe),
                   ),
                   MealSlotCard(
                     title: 'Lunch',
                     recipes: mealPlan.lunch,
                     onAddPressed: () => _pickRecipe('lunch'),
+                    onRemovePressed: (recipe) => _removeRecipe('lunch', recipe),
                   ),
                   MealSlotCard(
                     title: 'Dinner',
                     recipes: mealPlan.dinner,
                     onAddPressed: () => _pickRecipe('dinner'),
+                    onRemovePressed: (recipe) => _removeRecipe('dinner', recipe),
                   ),
                   const SizedBox(height: 20),
                 ],

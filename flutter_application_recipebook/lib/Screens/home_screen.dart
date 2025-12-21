@@ -226,14 +226,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       imagePath:
                           'assets/home_screen/recommendation-grilledChicken.jpg',
                       recipeName: 'Grilled Chicken',
-                      details: '5 ingredients | 30 min',
+                      details: '5 ingredients | 40 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
                       imagePath:
                           'assets/home_screen/recommendation-carBonaRa.jpg',
                       recipeName: 'Carbonara',
-                      details: '8 ingredients | 25 min',
+                      details: '8 ingredients | 30 min',
                     ),
                     SizedBox(width: 15),
                     RecommendationPill(
