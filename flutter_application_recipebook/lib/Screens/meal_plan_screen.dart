@@ -1,10 +1,14 @@
+// Screens/meal_plan_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Providers/meal_plan_provider.dart';
+import '../Providers/recipe_providers.dart';
 import '../Widgets/bottom_nav_pill.dart';
-import '../Widgets/meal_day_selector.dart';
 import '../Widgets/meal_slot_card.dart';
+
+import 'home_screen.dart';
+import 'favorites_list_screen.dart';
 import 'meal_recipe_picker_screen.dart';
 
 class MealPlanScreen extends ConsumerStatefulWidget {
@@ -16,7 +20,7 @@ class MealPlanScreen extends ConsumerStatefulWidget {
 
 class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
   String selectedDay = 'Monday';
-  int currentIndex = 2;
+  int _currentIndex = 1; // ✅ Meal Plan
 
   final List<String> days = const [
     'Monday',
@@ -28,88 +32,138 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
     'Sunday',
   ];
 
-  Future<void> _addRecipe(BuildContext context, String mealType) async {
-    final recipe = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) =>
-            MealRecipePickerScreen(day: selectedDay, mealType: mealType),
+  void _onNavTap(int index) {
+    if (index == _currentIndex) return;
+
+    switch (index) {
+      case 0:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          (_) => false,
+        );
+        break;
+
+      case 3:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const FavoritesListScreen()),
+          (_) => false,
+        );
+        break;
+    }
+  }
+
+  void _pickRecipe(String mealType) async {
+    final recipes = ref.read(recipesDataProvider);
+
+    final selected = await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // ✅ allows taller modal
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
+      builder: (context) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.85, // ✅ BIGGER
+          child: MealRecipePickerScreen(recipes: recipes),
+        );
+      },
     );
 
-    if (recipe != null) {
+    if (selected != null) {
       ref
           .read(mealPlanProvider.notifier)
-          .addMeal(day: selectedDay, mealType: mealType, recipe: recipe);
+          .addMeal(day: selectedDay, mealType: mealType, recipe: selected);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final mealPlans = ref.watch(mealPlanProvider);
-    final plan = mealPlans[selectedDay];
+    final mealPlan = ref.watch(mealPlanProvider)[selectedDay]!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Meal Plan'),
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF002A22),
+        elevation: 0,
+        leading: BackButton(onPressed: () => Navigator.pop(context)),
+      ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Title
-            const Padding(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                'Meal Plan',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF002A22),
-                ),
+            const SizedBox(height: 12),
+
+            // Days selector
+            SizedBox(
+              height: 40,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: days.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemBuilder: (_, index) {
+                  final day = days[index];
+                  final isSelected = day == selectedDay;
+
+                  return GestureDetector(
+                    onTap: () => setState(() => selectedDay = day),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? const Color(0xFF002A22)
+                            : Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        day.substring(0, 3),
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
 
-            /// Day selector
-            MealDaySelector(
-              days: days,
-              selectedDay: selectedDay,
-              onDaySelected: (day) {
-                setState(() => selectedDay = day);
-              },
-            ),
+            const SizedBox(height: 16),
 
-            const SizedBox(height: 20),
-
-            /// Meal slots
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   MealSlotCard(
                     title: 'Breakfast',
-                    recipes: plan?.breakfast ?? [],
-                    onAdd: () => _addRecipe(context, 'breakfast'),
+                    recipes: mealPlan.breakfast,
+                    onAddPressed: () => _pickRecipe('breakfast'),
                   ),
                   MealSlotCard(
                     title: 'Lunch',
-                    recipes: plan?.lunch ?? [],
-                    onAdd: () => _addRecipe(context, 'lunch'),
+                    recipes: mealPlan.lunch,
+                    onAddPressed: () => _pickRecipe('lunch'),
                   ),
                   MealSlotCard(
                     title: 'Dinner',
-                    recipes: plan?.dinner ?? [],
-                    onAdd: () => _addRecipe(context, 'dinner'),
+                    recipes: mealPlan.dinner,
+                    onAddPressed: () => _pickRecipe('dinner'),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
           ],
         ),
       ),
-
       bottomNavigationBar: BottomNavPill(
-        currentIndex: currentIndex,
-        onTap: (_) {},
+        currentIndex: _currentIndex,
+        onTap: _onNavTap,
       ),
     );
   }

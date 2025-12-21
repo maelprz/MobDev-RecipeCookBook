@@ -1,9 +1,20 @@
-import '../Models/recipe.dart';
+import 'recipe.dart';
+
+class MealPlanRecipe {
+  final Recipe recipe;
+  final int servings;
+
+  const MealPlanRecipe({required this.recipe, this.servings = 1});
+
+  MealPlanRecipe copyWith({int? servings}) {
+    return MealPlanRecipe(recipe: recipe, servings: servings ?? this.servings);
+  }
+}
 
 class MealPlan {
-  final List<Recipe> breakfast;
-  final List<Recipe> lunch;
-  final List<Recipe> dinner;
+  final List<MealPlanRecipe> breakfast;
+  final List<MealPlanRecipe> lunch;
+  final List<MealPlanRecipe> dinner;
 
   const MealPlan({
     this.breakfast = const [],
@@ -12,9 +23,9 @@ class MealPlan {
   });
 
   MealPlan copyWith({
-    List<Recipe>? breakfast,
-    List<Recipe>? lunch,
-    List<Recipe>? dinner,
+    List<MealPlanRecipe>? breakfast,
+    List<MealPlanRecipe>? lunch,
+    List<MealPlanRecipe>? dinner,
   }) {
     return MealPlan(
       breakfast: breakfast ?? this.breakfast,
