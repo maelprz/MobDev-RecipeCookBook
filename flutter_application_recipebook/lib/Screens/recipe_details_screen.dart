@@ -9,6 +9,9 @@ import 'home_screen.dart';
 import 'favorites_list_screen.dart';
 import 'meal_plan_screen.dart';
 
+/// Provider to store notes per recipe
+final recipeNotesProvider = StateProvider<Map<String, String>>((ref) => {});
+
 class RecipeDetailsScreen extends ConsumerStatefulWidget {
   final String recipeId;
 
@@ -54,6 +57,60 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
     }
   }
 
+Future<void> _editNotes(String recipeId) async {
+  final notesMap = ref.read(recipeNotesProvider);
+  String noteText = notesMap[recipeId] ?? '';
+
+  final result = await showDialog<String>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: Colors.white, // popup background
+        title: const Text(
+          'Notes',
+          style: TextStyle(color: Color(0xFF1D5120)), // title color
+        ),
+        content: TextFormField(
+          initialValue: noteText,
+          maxLines: 5,
+          onChanged: (val) => noteText = val,
+          decoration: const InputDecoration(
+            hintText: 'Type your notes here...',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Color(0xFF1D5120)), // cancel color
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1D5120), // save button background
+            ),
+            onPressed: () => Navigator.pop(context, noteText),
+            child: const Text(
+              'Save',
+              style: TextStyle(color: Colors.white), // save text white
+            ),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (result != null) {
+    ref.read(recipeNotesProvider.notifier).update((state) {
+      final newState = Map<String, String>.from(state);
+      newState[recipeId] = result;
+      return newState;
+    });
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     final recipe = ref.watch(recipeDetailProvider(widget.recipeId));
@@ -61,6 +118,8 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
     final isFavorite = favorites.contains(widget.recipeId);
     final ratings = ref.watch(ratingsProvider);
     final currentRating = ratings[widget.recipeId] ?? 0;
+    final notesMap = ref.watch(recipeNotesProvider);
+    final recipeNote = notesMap[widget.recipeId] ?? '';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -70,6 +129,7 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // IMAGE HEADER
               Stack(
                 children: [
                   Image.asset(
@@ -100,6 +160,8 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
                   ),
                 ],
               ),
+
+              // RECIPE CARD
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Transform.translate(
@@ -172,6 +234,8 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
                   ),
                 ),
               ),
+
+              // INGREDIENTS
               Transform.translate(
                 offset: const Offset(0, -65),
                 child: Padding(
@@ -192,20 +256,39 @@ class _RecipeDetailsScreenState extends ConsumerState<RecipeDetailsScreen> {
                   ),
                 ),
               ),
+
+              // INSTRUCTIONS with Notes
               Transform.translate(
                 offset: const Offset(0, -70),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: _SectionCard(
                     title: 'Instructions',
+                    trailing: IconButton(
+                      icon: const Icon(Icons.note_alt_outlined, size: 22),
+                      onPressed: () => _editNotes(widget.recipeId),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: recipe.steps.asMap().entries.map((entry) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text('${entry.key + 1}. ${entry.value}'),
-                        );
-                      }).toList(),
+                      children: [
+                        ...recipe.steps.asMap().entries.map((entry) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text('${entry.key + 1}. ${entry.value}'),
+                          );
+                        }).toList(),
+                        if (recipeNote.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              'Notes: $recipeNote',
+                              style: const TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Color(0xFF1D5120),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
@@ -249,8 +332,9 @@ class _CircleButton extends StatelessWidget {
 class _SectionCard extends StatelessWidget {
   final String title;
   final Widget child;
+  final Widget? trailing;
 
-  const _SectionCard({required this.title, required this.child});
+  const _SectionCard({required this.title, required this.child, this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -272,13 +356,20 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF002A22),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF002A22),
+                  ),
+                ),
+              ),
+              if (trailing != null) trailing!,
+            ],
           ),
           const SizedBox(height: 10),
           child,
