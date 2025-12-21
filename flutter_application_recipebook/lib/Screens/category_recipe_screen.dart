@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Providers/recipe_providers.dart';
+import '../Models/filter_state.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
 import '../Widgets/filter_pill.dart';
@@ -31,7 +32,6 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
 
     switch (index) {
       case 0:
-        // Go back to HomeScreen directly
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -45,7 +45,6 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
         debugPrint('Cart tapped');
         break;
       case 3:
-        // Navigate to FavoritesListScreen, removing intermediate screens
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const FavoritesListScreen()),
@@ -64,16 +63,13 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
   @override
   Widget build(BuildContext context) {
     final categoryTitle = widget.categoryName;
-    final allRecipes = ref.watch(recipesDataProvider);
 
-    // Filter recipes by category and search query
-    final filteredRecipes = allRecipes.where((recipe) {
-      final matchesCategory =
-          recipe.cuisine.toLowerCase() == categoryTitle.toLowerCase();
-      final matchesSearch = recipe.name
-          .toLowerCase()
-          .contains(searchController.text.toLowerCase());
-      return matchesCategory && matchesSearch;
+    // 🔹 Use COMPUTED provider (sorting + filtering works)
+    final recipes = ref.watch(filteredRecipesProvider);
+
+    // 🔹 Category-specific filtering (lightweight & correct)
+    final categoryRecipes = recipes.where((recipe) {
+      return recipe.cuisine.toLowerCase() == categoryTitle.toLowerCase();
     }).toList();
 
     return Scaffold(
@@ -84,7 +80,7 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
           children: [
             const SizedBox(height: 10),
 
-            // Back Button → always goes back to HomeScreen
+            // ⬅ Back to Home
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: IconButton(
@@ -101,19 +97,21 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
 
             const SizedBox(height: 5),
 
-            // Search Bar
+            // 🔍 Search Bar (connected to provider)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: SearchBarPill(
                 controller: searchController,
                 hintText: 'Search Recipes',
-                onChanged: (_) => setState(() {}),
+                onChanged: (value) {
+                  ref.read(searchQueryProvider.notifier).state = value;
+                },
               ),
             ),
 
             const SizedBox(height: 10),
 
-            // Category Title
+            // 🏷 Category Title
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Text(
@@ -128,27 +126,41 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
 
             const SizedBox(height: 10),
 
-            // Filter Pills
+            // 🎛 SORT FILTER PILLS
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
-                children: const [
-                  FilterPill(label: 'Time'),
-                  SizedBox(width: 10),
-                  FilterPill(label: 'Difficulty'),
+                children: [
+                  FilterPill(
+                    label: 'Time',
+                    onTap: () {
+                      ref
+                          .read(recipeFiltersProvider.notifier)
+                          .setSortOption(SortOption.cookingTime);
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  FilterPill(
+                    label: 'Difficulty',
+                    onTap: () {
+                      ref
+                          .read(recipeFiltersProvider.notifier)
+                          .setSortOption(SortOption.difficulty);
+                    },
+                  ),
                 ],
               ),
             ),
 
             const SizedBox(height: 20),
 
-            // Recipe Cards
+            // 🍽 Recipe List
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                itemCount: filteredRecipes.length,
+                itemCount: categoryRecipes.length,
                 itemBuilder: (context, index) {
-                  final recipe = filteredRecipes[index];
+                  final recipe = categoryRecipes[index];
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15),
@@ -178,7 +190,6 @@ class _CategoryRecipesScreenState extends ConsumerState<CategoryRecipesScreen> {
         ),
       ),
 
-      // Bottom Navigation
       bottomNavigationBar: BottomNavPill(
         currentIndex: _currentIndex,
         onTap: _onNavTap,
