@@ -1,13 +1,21 @@
-import 'package:flutter_application_recipebook/Models/recipe.dart';
+import '../Models/recipe.dart';
 
 class MealPlan {
-  final Recipe? breakfast;
-  final Recipe? lunch;
-  final Recipe? dinner;
+  final List<Recipe> breakfast;
+  final List<Recipe> lunch;
+  final List<Recipe> dinner;
 
-  MealPlan({this.breakfast, this.lunch, this.dinner});
+  const MealPlan({
+    this.breakfast = const [],
+    this.lunch = const [],
+    this.dinner = const [],
+  });
 
-  MealPlan copyWith({Recipe? breakfast, Recipe? lunch, Recipe? dinner}) {
+  MealPlan copyWith({
+    List<Recipe>? breakfast,
+    List<Recipe>? lunch,
+    List<Recipe>? dinner,
+  }) {
     return MealPlan(
       breakfast: breakfast ?? this.breakfast,
       lunch: lunch ?? this.lunch,

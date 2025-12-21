@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../Widgets/filter_pill.dart';
-import '../Widgets/recipe_card.dart';
-import '../Widgets/bottom_nav_pill.dart';
+
 import '../Providers/meal_plan_provider.dart';
-import '../Providers/recipe_providers.dart';
-import '../Screens/recipe_details_screen.dart';
+import '../Widgets/bottom_nav_pill.dart';
+import '../Widgets/meal_day_selector.dart';
+import '../Widgets/meal_slot_card.dart';
+import 'meal_recipe_picker_screen.dart';
 
 class MealPlanScreen extends ConsumerStatefulWidget {
   const MealPlanScreen({super.key});
@@ -15,125 +15,101 @@ class MealPlanScreen extends ConsumerStatefulWidget {
 }
 
 class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
-  int currentIndex = 1; // Meal Plan tab
+  String selectedDay = 'Monday';
+  int currentIndex = 2;
 
-  void onTabTapped(int index) {
-    setState(() {
-      currentIndex = index;
-    });
-    // TODO: navigate to other screens based on index
+  final List<String> days = const [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
+  Future<void> _addRecipe(BuildContext context, String mealType) async {
+    final recipe = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            MealRecipePickerScreen(day: selectedDay, mealType: mealType),
+      ),
+    );
+
+    if (recipe != null) {
+      ref
+          .read(mealPlanProvider.notifier)
+          .addMeal(day: selectedDay, mealType: mealType, recipe: recipe);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final mealPlan = ref.watch(mealPlanProvider);
-    final weekdays = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
+    final mealPlans = ref.watch(mealPlanProvider);
+    final plan = mealPlans[selectedDay];
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text('Weekly Meal Plan'),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          // Filter pills
-          SizedBox(
-            height: 50,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: const [
-                FilterPill(label: 'Breakfast'),
-                FilterPill(label: 'Lunch'),
-                FilterPill(label: 'Dinner'),
-                FilterPill(label: 'Snack'),
-              ],
+      backgroundColor: const Color(0xFFF5F5F5),
+
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Title
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                'Meal Plan',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF002A22),
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          // Meal Plan per day
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: weekdays.length,
-              itemBuilder: (context, index) {
-                final day = weekdays[index];
-                final recipesForDay = mealPlan[day] ?? [];
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      day,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 140,
-                      child: recipesForDay.isNotEmpty
-                          ? ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: recipesForDay.length,
-                              itemBuilder: (context, recipeIndex) {
-                                final recipeId = recipesForDay[recipeIndex];
-                                final recipe = ref.watch(
-                                  recipeDetailProvider(recipeId),
-                                );
-
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 12),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => RecipeDetailsScreen(
-                                            recipeId: recipeId,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: SizedBox(
-                                      width: 300,
-                                      child: RecipeCard(
-                                        imagePath: recipe.imagePath,
-                                        title: recipe.name,
-                                        time: '${recipe.cookingTime} min',
-                                        difficulty: recipe.difficulty,
-                                        isFavorite:
-                                            false, // since Recipe has no isFavorite yet
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            )
-                          : const Center(child: Text('No recipes added')),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                );
+            /// Day selector
+            MealDaySelector(
+              days: days,
+              selectedDay: selectedDay,
+              onDaySelected: (day) {
+                setState(() => selectedDay = day);
               },
             ),
-          ),
-        ],
+
+            const SizedBox(height: 20),
+
+            /// Meal slots
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                children: [
+                  MealSlotCard(
+                    title: 'Breakfast',
+                    recipes: plan?.breakfast ?? [],
+                    onAdd: () => _addRecipe(context, 'breakfast'),
+                  ),
+                  MealSlotCard(
+                    title: 'Lunch',
+                    recipes: plan?.lunch ?? [],
+                    onAdd: () => _addRecipe(context, 'lunch'),
+                  ),
+                  MealSlotCard(
+                    title: 'Dinner',
+                    recipes: plan?.dinner ?? [],
+                    onAdd: () => _addRecipe(context, 'dinner'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+
       bottomNavigationBar: BottomNavPill(
         currentIndex: currentIndex,
-        onTap: onTabTapped,
+        onTap: (_) {},
       ),
     );
   }

@@ -1,59 +1,115 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../Models/meal_plan.dart';
+import '../Models/recipe.dart';
 
-// A type alias for clarity: weekday -> list of recipe IDs
-typedef MealPlan = Map<String, List<String>>;
-
-// MealPlanNotifier handles adding/removing recipes to weekdays
-class MealPlanNotifier extends StateNotifier<MealPlan> {
+class MealPlanNotifier extends StateNotifier<Map<String, MealPlan>> {
   MealPlanNotifier()
     : super({
-        'Monday': [],
-        'Tuesday': [],
-        'Wednesday': [],
-        'Thursday': [],
-        'Friday': [],
-        'Saturday': [],
-        'Sunday': [],
+        'Monday': const MealPlan(),
+        'Tuesday': const MealPlan(),
+        'Wednesday': const MealPlan(),
+        'Thursday': const MealPlan(),
+        'Friday': const MealPlan(),
+        'Saturday': const MealPlan(),
+        'Sunday': const MealPlan(),
       });
 
-  // Add a recipe to a specific day
-  void addRecipe(String day, String recipeId) {
-    final dayRecipes = List<String>.from(state[day] ?? []);
-    if (!dayRecipes.contains(recipeId)) {
-      dayRecipes.add(recipeId);
-      state = {...state, day: dayRecipes};
+  /// ✅ ADD recipe to a specific meal slot
+  void addMeal({
+    required String day,
+    required String mealType,
+    required Recipe recipe,
+  }) {
+    final currentPlan = state[day] ?? const MealPlan();
+
+    MealPlan updatedPlan;
+
+    switch (mealType) {
+      case 'breakfast':
+        updatedPlan = currentPlan.copyWith(
+          breakfast: [...currentPlan.breakfast, recipe],
+        );
+        break;
+
+      case 'lunch':
+        updatedPlan = currentPlan.copyWith(
+          lunch: [...currentPlan.lunch, recipe],
+        );
+        break;
+
+      case 'dinner':
+        updatedPlan = currentPlan.copyWith(
+          dinner: [...currentPlan.dinner, recipe],
+        );
+        break;
+
+      default:
+        return;
     }
+
+    state = {...state, day: updatedPlan};
   }
 
-  // Remove a recipe from a specific day
-  void removeRecipe(String day, String recipeId) {
-    final dayRecipes = List<String>.from(state[day] ?? []);
-    if (dayRecipes.contains(recipeId)) {
-      dayRecipes.remove(recipeId);
-      state = {...state, day: dayRecipes};
+  /// ❌ REMOVE recipe from a slot
+  void removeMeal({
+    required String day,
+    required String mealType,
+    required Recipe recipe,
+  }) {
+    final currentPlan = state[day];
+    if (currentPlan == null) return;
+
+    MealPlan updatedPlan;
+
+    switch (mealType) {
+      case 'breakfast':
+        updatedPlan = currentPlan.copyWith(
+          breakfast: currentPlan.breakfast
+              .where((r) => r.id != recipe.id)
+              .toList(),
+        );
+        break;
+
+      case 'lunch':
+        updatedPlan = currentPlan.copyWith(
+          lunch: currentPlan.lunch.where((r) => r.id != recipe.id).toList(),
+        );
+        break;
+
+      case 'dinner':
+        updatedPlan = currentPlan.copyWith(
+          dinner: currentPlan.dinner.where((r) => r.id != recipe.id).toList(),
+        );
+        break;
+
+      default:
+        return;
     }
+
+    state = {...state, day: updatedPlan};
   }
 
-  // Clear all recipes from a specific day
+  /// 🧹 Clear one day
   void clearDay(String day) {
-    state = {...state, day: []};
+    state = {...state, day: const MealPlan()};
   }
 
-  // Reset the entire meal plan
+  /// 🔄 Reset everything
   void resetMealPlan() {
     state = {
-      'Monday': [],
-      'Tuesday': [],
-      'Wednesday': [],
-      'Thursday': [],
-      'Friday': [],
-      'Saturday': [],
-      'Sunday': [],
+      'Monday': const MealPlan(),
+      'Tuesday': const MealPlan(),
+      'Wednesday': const MealPlan(),
+      'Thursday': const MealPlan(),
+      'Friday': const MealPlan(),
+      'Saturday': const MealPlan(),
+      'Sunday': const MealPlan(),
     };
   }
 }
 
-// The provider to watch in UI
-final mealPlanProvider = StateNotifierProvider<MealPlanNotifier, MealPlan>(
-  (ref) => MealPlanNotifier(),
-);
+/// 🔹 Provider
+final mealPlanProvider =
+    StateNotifierProvider<MealPlanNotifier, Map<String, MealPlan>>(
+      (ref) => MealPlanNotifier(),
+    );
