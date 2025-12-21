@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Providers/favorites_provider.dart';
 import '../Providers/recipe_providers.dart';
+import '../Providers/ratings_provider.dart';
 import '../Models/filter_state.dart';
 import '../Widgets/bottom_nav_pill.dart';
 import '../Widgets/search_bar_pill.dart';
@@ -54,6 +55,7 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
   Widget build(BuildContext context) {
     final allRecipes = ref.watch(filteredRecipesProvider);
     final favoriteIds = ref.watch(favoritesProvider);
+    final ratings = ref.watch(ratingsProvider);
 
     // Filter only favorite recipes
     List favoriteRecipes =
@@ -178,6 +180,7 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
                       itemCount: favoriteRecipes.length,
                       itemBuilder: (context, index) {
                         final recipe = favoriteRecipes[index];
+                        final recipeRating = ratings[recipe.id] ?? 0;
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 15),
@@ -187,6 +190,7 @@ class _FavoritesListScreenState extends ConsumerState<FavoritesListScreen> {
                             time: '${recipe.cookingTime} min',
                             difficulty: recipe.difficulty,
                             isFavorite: favoriteIds.contains(recipe.id),
+                            rating: recipeRating, // <-- show stars
                             onFavoriteTap: () {
                               ref
                                   .read(favoritesProvider.notifier)

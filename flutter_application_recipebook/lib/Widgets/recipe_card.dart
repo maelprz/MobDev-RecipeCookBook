@@ -6,6 +6,7 @@ class RecipeCard extends StatelessWidget {
   final String time;
   final String difficulty;
   final bool isFavorite;
+  final int rating;
   final VoidCallback? onFavoriteTap;
   final VoidCallback? onTap;
 
@@ -16,6 +17,7 @@ class RecipeCard extends StatelessWidget {
     required this.time,
     required this.difficulty,
     this.isFavorite = false,
+    this.rating = 0,
     this.onFavoriteTap,
     this.onTap,
   });
@@ -26,7 +28,7 @@ class RecipeCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        height: 120,
+        height: 140,
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -34,7 +36,7 @@ class RecipeCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 13), // ~5%
+              color: Colors.black.withValues(alpha: 13),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -56,7 +58,7 @@ class RecipeCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 15),
                   Text(
                     title,
                     style: const TextStyle(
@@ -76,6 +78,17 @@ class RecipeCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(difficulty),
                     ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: List.generate(5, (index) {
+                      final starIndex = index + 1;
+                      return Icon(
+                        starIndex <= rating ? Icons.star : Icons.star_border,
+                        color: Colors.amber,
+                        size: 16,
+                      );
+                    }),
                   ),
                 ],
               ),
