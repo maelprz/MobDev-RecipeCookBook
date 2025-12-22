@@ -118,8 +118,10 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
         child: Column(
           children: [
             const SizedBox(height: 12),
+
+            // 🔹 Day selector
             SizedBox(
-              height: 40,
+              height: 50,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -131,21 +133,23 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
 
                   return GestureDetector(
                     onTap: () => setState(() => selectedDay = day),
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                        horizontal: 18,
+                        vertical: 10,
                       ),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? const Color(0xFF1D5120)
                             : Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(25),
                       ),
                       child: Text(
                         day.substring(0, 3),
                         style: TextStyle(
                           color: isSelected ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -153,7 +157,92 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
                 },
               ),
             ),
+            const SizedBox(height: 12),
+
+            // 🔹 Clear Day & Reset Week buttons
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(mealPlanProvider.notifier).clearDay(selectedDay);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade600.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.red.shade200.withOpacity(0.5),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.clear, color: Colors.white, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'Clear Day',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(mealPlanProvider.notifier).resetMealPlan();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade700.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orange.shade300.withOpacity(0.5),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.refresh, color: Colors.white, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'Reset Week',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 16),
+
+            // 🔹 Meal slots
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
