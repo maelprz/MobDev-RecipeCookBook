@@ -14,7 +14,7 @@ class MealPlanNotifier extends StateNotifier<Map<String, MealPlan>> {
         'Sunday': const MealPlan(),
       });
 
-  /// ADD recipe to a specific meal slot (prevents duplicates, increments servings)
+  /// ADD recipe
   void addMeal({
     required String day,
     required String mealType,
@@ -60,8 +60,7 @@ class MealPlanNotifier extends StateNotifier<Map<String, MealPlan>> {
     state = {...state, day: updatedPlan};
   }
 
-  /// REMOVE recipe from a slot
-  /// REMOVE recipe from a slot (decrements servings if more than 1)
+  // REMOVE recipe from a slot
   void removeMeal({
     required String day,
     required String mealType,
@@ -80,11 +79,9 @@ class MealPlanNotifier extends StateNotifier<Map<String, MealPlan>> {
       final current = updated[index];
 
       if (current.servings > 1) {
-        // decrement servings by 1
         updated[index] = current.copyWith(servings: current.servings - 1);
         return updated;
       } else {
-        // remove recipe if only 1 serving left
         updated.removeAt(index);
         return updated;
       }

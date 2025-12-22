@@ -4,15 +4,15 @@ import '../Data/recipe_data.dart';
 import '../Models/recipe.dart';
 import '../Models/filter_state.dart';
 
-/// 🔹 Mock recipe data
+//Mock recipe data provider
 final recipesDataProvider = Provider<List<Recipe>>((ref) {
   return recipesData;
 });
 
-/// 🔹 Search query
+///Search query
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-/// 🔹 Filters & sorting state
+///Filters & sorting state
 final recipeFiltersProvider =
     StateNotifierProvider<RecipeFiltersNotifier, FilterState>((ref) {
       return RecipeFiltersNotifier();
@@ -38,13 +38,13 @@ class RecipeFiltersNotifier extends StateNotifier<FilterState> {
   }
 }
 
-/// 🔹 Filtered + searched + sorted recipes (COMPUTED)
+/// Filtered + searched + sorted recipes
 final filteredRecipesProvider = Provider<List<Recipe>>((ref) {
   final allRecipes = ref.watch(recipesDataProvider);
   final query = ref.watch(searchQueryProvider).toLowerCase();
   final filters = ref.watch(recipeFiltersProvider);
 
-  // 1️⃣ Filtering + search
+  // Filtering + search
   List<Recipe> results = allRecipes.where((recipe) {
     final matchesSearch =
         query.isEmpty ||
@@ -61,7 +61,7 @@ final filteredRecipesProvider = Provider<List<Recipe>>((ref) {
     return matchesSearch && matchesDifficulty && matchesTime;
   }).toList();
 
-  // 2️⃣ Sorting
+  //Sorting
   switch (filters.sortOption) {
     case SortOption.cookingTime:
       results.sort((a, b) => a.cookingTime.compareTo(b.cookingTime));
@@ -84,7 +84,7 @@ final filteredRecipesProvider = Provider<List<Recipe>>((ref) {
   return results;
 });
 
-/// 🔹 Recipe detail (AUTO DISPOSE – rubric requirement)
+///Recipe detail - AUTO DISPOSE
 final recipeDetailProvider = Provider.family.autoDispose<Recipe, String>((
   ref,
   recipeId,
@@ -93,7 +93,7 @@ final recipeDetailProvider = Provider.family.autoDispose<Recipe, String>((
   return recipes.firstWhere((recipe) => recipe.id == recipeId);
 });
 
-/// 🔹 Safe nullable variant
+/// Safe nullable variant
 final recipeByIdProvider = Provider.family.autoDispose<Recipe?, String>((
   ref,
   id,
