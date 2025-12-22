@@ -49,25 +49,20 @@ class MealSlotCard extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.add_circle_outline),
-                color: const Color(0xFF1D5120), // Updated Add (+) color
+                color: const Color(0xFF1D5120),
                 onPressed: onAddPressed,
               ),
             ],
           ),
-
           const SizedBox(height: 10),
-
-          // Empty state
           if (recipes.isEmpty)
             const Text(
               'No meals added yet',
               style: TextStyle(color: Colors.grey),
             ),
-
-          // Meals list
           if (recipes.isNotEmpty)
             Column(
-              mainAxisSize: MainAxisSize.min, // <-- prevents extra vertical space
+              mainAxisSize: MainAxisSize.min,
               children: recipes.map((mealRecipe) {
                 final recipe = mealRecipe.recipe;
                 return GestureDetector(
@@ -75,20 +70,21 @@ class MealSlotCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => RecipeDetailsScreen(recipeId: recipe.id),
+                        builder: (_) =>
+                            RecipeDetailsScreen(recipeId: recipe.id),
                       ),
                     );
                   },
                   child: Container(
-                    margin: const EdgeInsets.only(bottom: 8), // smaller spacing
+                    margin: const EdgeInsets.only(bottom: 8),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center, // <-- align vertically center
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.asset(
                             recipe.imagePath,
-                            width: 80, // slightly smaller
+                            width: 80,
                             height: 80,
                             fit: BoxFit.cover,
                           ),
@@ -97,7 +93,7 @@ class MealSlotCard extends StatelessWidget {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min, // <-- prevent stretching
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
                                 recipe.name,
@@ -108,7 +104,7 @@ class MealSlotCard extends StatelessWidget {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                '${recipe.cookingTime} min • ${recipe.difficulty}',
+                                '${recipe.cookingTime} min • ${recipe.difficulty} • Servings: ${mealRecipe.servings}',
                                 style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.grey,

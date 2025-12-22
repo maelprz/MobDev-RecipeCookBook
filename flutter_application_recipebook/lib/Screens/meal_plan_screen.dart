@@ -1,4 +1,3 @@
-// Screens/meal_plan_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -78,7 +77,9 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
   }
 
   void _removeRecipe(String mealType, dynamic mealPlanRecipe) {
-    ref.read(mealPlanProvider.notifier).removeMeal(
+    ref
+        .read(mealPlanProvider.notifier)
+        .removeMeal(
           day: selectedDay,
           mealType: mealType,
           recipe: mealPlanRecipe.recipe,
@@ -174,7 +175,8 @@ class _MealPlanScreenState extends ConsumerState<MealPlanScreen> {
                     title: 'Dinner',
                     recipes: mealPlan.dinner,
                     onAddPressed: () => _pickRecipe('dinner'),
-                    onRemovePressed: (recipe) => _removeRecipe('dinner', recipe),
+                    onRemovePressed: (recipe) =>
+                        _removeRecipe('dinner', recipe),
                   ),
                   const SizedBox(height: 20),
                 ],

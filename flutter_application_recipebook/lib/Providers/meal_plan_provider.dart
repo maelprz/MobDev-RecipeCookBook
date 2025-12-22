@@ -1,4 +1,3 @@
-// Providers/meal_plan_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Models/meal_plan.dart';
 import '../Models/recipe.dart';
@@ -62,6 +61,7 @@ class MealPlanNotifier extends StateNotifier<Map<String, MealPlan>> {
   }
 
   /// REMOVE recipe from a slot
+  /// REMOVE recipe from a slot (decrements servings if more than 1)
   void removeMeal({
     required String day,
     required String mealType,
@@ -72,26 +72,38 @@ class MealPlanNotifier extends StateNotifier<Map<String, MealPlan>> {
 
     MealPlan updatedPlan;
 
+    List<MealPlanRecipe> updateList(List<MealPlanRecipe> list) {
+      final index = list.indexWhere((r) => r.recipe.id == recipe.id);
+      if (index == -1) return list;
+
+      final updated = List<MealPlanRecipe>.from(list);
+      final current = updated[index];
+
+      if (current.servings > 1) {
+        // decrement servings by 1
+        updated[index] = current.copyWith(servings: current.servings - 1);
+        return updated;
+      } else {
+        // remove recipe if only 1 serving left
+        updated.removeAt(index);
+        return updated;
+      }
+    }
+
     switch (mealType) {
       case 'breakfast':
         updatedPlan = currentPlan.copyWith(
-          breakfast: currentPlan.breakfast
-              .where((r) => r.recipe.id != recipe.id)
-              .toList(),
+          breakfast: updateList(currentPlan.breakfast),
         );
         break;
       case 'lunch':
         updatedPlan = currentPlan.copyWith(
-          lunch: currentPlan.lunch
-              .where((r) => r.recipe.id != recipe.id)
-              .toList(),
+          lunch: updateList(currentPlan.lunch),
         );
         break;
       case 'dinner':
         updatedPlan = currentPlan.copyWith(
-          dinner: currentPlan.dinner
-              .where((r) => r.recipe.id != recipe.id)
-              .toList(),
+          dinner: updateList(currentPlan.dinner),
         );
         break;
       default:
