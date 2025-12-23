@@ -76,19 +76,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       {
         'name': 'Grilled Chicken',
         'image': 'assets/home_screen/recommendation-grilledChicken.jpg',
-        'details': '5 ingredients | 40 min',
+        'details': '2 ingredients | 40 min',
         'numFave': 1700,
       },
       {
         'name': 'Carbonara',
         'image': 'assets/home_screen/recommendation-carBonaRa.jpg',
-        'details': '8 ingredients | 30 min',
+        'details': '2 ingredients | 30 min',
         'numFave': 980,
       },
       {
         'name': 'Beef Steak',
         'image': 'assets/home_screen/recommendation-beefSteak.jpg',
-        'details': '7 ingredients | 40 min',
+        'details': '3 ingredients | 40 min',
         'numFave': 1500, // try changing this to see sorting
       },
       {
