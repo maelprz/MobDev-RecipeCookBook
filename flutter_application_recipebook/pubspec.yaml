@@ -26,6 +26,7 @@ flutter:
     - assets/home_screen/recommendation-beefSteak.jpg
     - assets/home_screen/recommendation-carBonaRa.jpg
     - assets/home_screen/recommendation-grilledChicken.jpg
+    - assets/home_screen/recommendation-salmon.jpg
 
     - assets/view_all_categories/1chicken.jpg
     - assets/view_all_categories/2pork.jpg
